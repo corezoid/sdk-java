@@ -163,15 +163,13 @@ public class UtiisTest extends TestCase {
         String ref = "11";
         String conv_id = "1234";
         String key = "123";
-        ConveyorMessage mes = ConveyorMessage.request( key, Arrays.asList( RequestOperation.create( conv_id, ref, data ) ) );
+        String apiLogin = "12345";
+        ConveyorMessage mes = ConveyorMessage.request( key, apiLogin, Arrays.asList( RequestOperation.create( conv_id, ref, data ) ) );
         System.out.println( ">>testGetConvQueryMessage :" );
-        System.out.println( "key \t\t" + mes.key );
-        System.out.println( "time \t\t" + mes.time );
-        System.out.println( "sign \t\t" + mes.signCode );
         System.out.println( "body \t\t" + mes.body );
+        System.out.println("url \t\t " + mes.url);
         String expBody = "{\"ops\":[{\"ref\":\"11\",\"conv_id\":\"1234\",\"type\":\"create\",\"obj\":\"task\",\"data\":{\"phone\":\"1\",\"card\":\"2\"}}]}";
         assertEquals( expBody, mes.body );
-
 
     }
 }

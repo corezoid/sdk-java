@@ -13,7 +13,7 @@ import net.sf.json.*;
 public final class ConveyorMessage {
 //----------------------------------------------------------------------------------------------------------------------
     /**
-     * Create response 
+     * Create response body
      * @param operations
      * @return
      */
@@ -33,11 +33,12 @@ public final class ConveyorMessage {
 
     /**
      * Create request
-     * @param key - ключ
-     * @param operations - спискок операций
+     * @param apiSecret 
+     * @param apiLogin
+     * @param operations
      * @return
      */
-    public static ConveyorMessage request( String key, List<RequestOperation> operations ) {
+    public static ConveyorMessage request( String apiSecret, String apiLogin, List<RequestOperation> operations ) {
         JSONObject obj = new JSONObject();
         obj.element( ops, new JSONArray() );
         JSONArray jsOps = new JSONArray();
@@ -47,21 +48,22 @@ public final class ConveyorMessage {
         obj.element( ops, jsOps );
         String content = obj.toString();
         String unixTime = String.valueOf( System.currentTimeMillis() / 1000 );
-        return new ConveyorMessage( content, unixTime, key );
+                
+        return new ConveyorMessage( content, unixTime, apiSecret, apiLogin);
     }
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
      * Check signature
      * @param sign - @QueruParam SIGNATURE from url 
-     * @param key - conveyor secret key
+     * @param apiSecret - api secret key
      * @param time - @QueruParam GMT_UNIXTIME from url
      * @param content - request body
      * @return true if signature is valid, or false 
      */
-    public static boolean checkSign( String sign, String key, String time, String content ) {
+    public static boolean checkSign( String sign, String apiSecret, String time, String content ) {
         ConveyorMessage resivedSign = new ConveyorMessage( sign );
-        ConveyorMessage calculatedSign = new ConveyorMessage( content, time, key );
+        ConveyorMessage calculatedSign = new ConveyorMessage( content, time, apiSecret, "" );
         return resivedSign.equals( calculatedSign );
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -90,18 +92,26 @@ public final class ConveyorMessage {
     }
 
 //----------------------------------------------------------------------------------------------------------------------
-    private ConveyorMessage( String body, String time, String key ) {
+    private ConveyorMessage( String body, String time, String apiSecret, String apiLogin   ) {
         this.body = body;
         this.time = time;
-        this.key = key;
-        this.signCode = generateSign( time, key, body );
+        this.apiSecret = apiSecret;
+        this.signCode = generateSign( time, apiSecret, body );
+        this.url = new StringBuilder()
+                .append( host ).append( "/api/" )
+                .append( version ).append( slash )
+                .append( format ).append( slash )
+                .append( apiLogin ).append( slash )
+                .append( time ).append( slash )
+                .append( signCode ).toString(); 
     }
 //----------------------------------------------------------------------------------------------------------------------
 
     private ConveyorMessage( String signCode ) {
         this.body = null;
         this.time = null;
-        this.key = null;
+        this.apiSecret = null;
+        this.url = null;
         this.signCode = signCode;
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -127,8 +137,9 @@ public final class ConveyorMessage {
         int hash = 3;
         hash = 89 * hash + (this.body != null ? this.body.hashCode() : 0);
         hash = 89 * hash + (this.time != null ? this.time.hashCode() : 0);
-        hash = 89 * hash + (this.key != null ? this.key.hashCode() : 0);
+        hash = 89 * hash + (this.apiSecret != null ? this.apiSecret.hashCode() : 0);
         hash = 89 * hash + (this.signCode != null ? this.signCode.hashCode() : 0);
+        hash = 89 * hash + (this.url != null ? this.url.hashCode() : 0);
         return hash;
     }
 
@@ -137,14 +148,14 @@ public final class ConveyorMessage {
      * Genarate signature
      * {SIGNATURE} = hex( sha1({GMT_UNIXTIME} + {API_SECRET} + {CONTENT} + {API_SECRET}) )
      * @param time - time
-     * @param key - key
+     * @param apiSecret - apiSecret
      * @param body - request body
      * @return - signature
      */
-    private static String generateSign( String time, String key, String body ) {
+    private static String generateSign( String time, String apiSecret, String body ) {
         MessageDigest sha1 = messageDigest.get();
         sha1.reset();
-        byte[] bytes = (time + key + body + key).getBytes();
+        byte[] bytes = (time + apiSecret + body + apiSecret).getBytes();
         String sha1hex = DatatypeConverter.printHexBinary( sha1.digest( bytes ) ).toLowerCase();
         return sha1hex;
     }
@@ -170,14 +181,18 @@ public final class ConveyorMessage {
     }
 //----------------------------------------------------------------------------------------------------------------------
     public final String body;
-    public final String time;
-    public final String key;
-    public final String signCode;
+    public final String url;
+    private final String time;
+    private final String apiSecret;
+    private final String signCode;
     private static final String ops = "ops";
     private static final String request_proc = "request_proc";
     private static final String proc = "proc";
     private static final String ref = "ref";
-
+    private static final String slash = "/";
+    private static final String host = "https://www.middleware.biz";
+    private static final String version = "1";
+    private static final String format = "json";
     private enum ResultType {
         ok, fail
     }

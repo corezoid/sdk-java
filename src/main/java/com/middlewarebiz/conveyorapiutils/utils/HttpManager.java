@@ -1,7 +1,7 @@
 
 package com.middlewarebiz.conveyorapiutils.utils;
 
-import com.middlewarebiz.conveyorapiutils.entity.ConveyorRequest;
+import com.middlewarebiz.conveyorapiutils.entity.ConveyorMessage;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
@@ -49,13 +49,13 @@ public class HttpManager {
      * @return
      * @throws Exception
      */
-    public String send( ConveyorRequest request ) throws Exception {
+    public String send( ConveyorMessage request ) throws Exception {
         HttpPost post = new HttpPost( request.url );
-        post.setEntity( new StringEntity( request.content, jsonUTF8 ) );
-        return send( post );
+        post.setEntity( new StringEntity( request.body, jsonUTF8 ) );
+        return sendBasic( post );
     }
 
-    private String send( HttpRequestBase request ) throws HttpException {
+    private String sendBasic( HttpRequestBase request ) throws HttpException {
         try {
             HttpResponse response = httpClient.execute( request );
             HttpEntity entity = response.getEntity();

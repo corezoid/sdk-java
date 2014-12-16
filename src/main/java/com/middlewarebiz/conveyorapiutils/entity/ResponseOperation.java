@@ -44,9 +44,9 @@ public class ResponseOperation {
 
     /**
      *
-     * @param proc - результат
-     * @param convId - ид конвейера
-     * @param ref- референс
+     * @param proc
+     * @param convId 
+     * @param ref
      * @param data -Map<key,value>
      * key - A key string.
      * value - An object which is the value.
