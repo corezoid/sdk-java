@@ -1,79 +1,77 @@
-
 package com.middlewarebiz.conveyorapiutils.entity;
 
-import java.util.Map;
 import net.sf.json.JSONObject;
 
 /**
  * Request operation
- * @author dn300986zav
+ *
+ * @author Middleware <support@middleware.biz>
  */
 public class RequestOperation {
 //----------------------------------------------------------------------------------------------------------------------
-    /**
-     * Create task in conveyor
-     * @param cinvId - conveyor id
-     * @param ref - task reference
-     * @param data - data to send, Map<key,value>
-     * key - A key string.
-     * value - An object which is the value.
-     * It should be of one of these types:
-     * Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull object.
-     * @return
-     */
-    public static RequestOperation create( String cinvId, String ref, Map<String, Object> data ) {
-
-        return new RequestOperation( Query.create, cinvId, ref, data );
-    }
-//----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Modify task in conveyor
-     * @param cinvId - conveyor id
-     * @param ref - task reference
-     * @param data -data to send, Map<key,value>
-     * key - A key string.
-     * value - An object which is the value.
-     * It should be of one of these types:
-     * Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull object.
-     * @return
-     */
-    public static RequestOperation modify( String cinvId, String ref, Map<String, Object> data ) {
-        return new RequestOperation( Query.modify, cinvId, ref, data );
-    }
-//----------------------------------------------------------------------------------------------------------------------
-
-    /**
+     * Builder for 'Create task' oparation
      *
-     * @param type - request type
-     * @param cinvId - conveyor id
+     * @param convId - conveyor id
      * @param ref - task reference
-     * @param data -Map<key,value>
-     * key - A key string.
-     * value - An object which is the value.
-     * It should be of one of these types:
-     * Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull object.
+     * @param data - task data
+     * @return
      */
-    private RequestOperation( Query type, String cinvId, String ref, Map<String, Object> data ) {
+    public static RequestOperation create(String convId, String ref,
+                                          JSONObject data) {
+
+        return new RequestOperation(Query.create, convId, ref, data);
+    }
+//----------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Builder for 'Modify task' operation
+     *
+     * @param convId - conveyor id
+     * @param ref - task reference
+     * @param data -task data
+     * @return
+     */
+    public static RequestOperation modify(String convId, String ref,
+                                          JSONObject data) {
+        
+        return new RequestOperation(Query.modify, convId, ref, data);
+    }
+//----------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @param type - request type
+     * @param convId - conveyor id
+     * @param ref - task reference
+     * @param data - task data
+     */
+    private RequestOperation(Query type, String convId, String ref,
+                             JSONObject data) {
+        if(convId == null || convId.equals("") ){
+            throw new IllegalArgumentException("convId is null or empty");
+        }
+        if(ref == null || ref.equals("") ){
+            throw new IllegalArgumentException("ref is null or empty");
+        }
+        if(data == null ){
+            throw new IllegalArgumentException("data is null");
+        }
         this.ref = ref;
         this.type = type;
         this.obj = "task";
-        this.convId = cinvId;
+        this.convId = convId;
         this.data = data;
     }
 
 //----------------------------------------------------------------------------------------------------------------------
     public JSONObject toJSONObject() {
         JSONObject res = new JSONObject()
-                .element( "ref", ref )
-                .element( "conv_id", convId )
-                .element( "type", type )
-                .element( "obj", obj );
-        JSONObject res_data = new JSONObject();
-        for ( String key : data.keySet() ) {
-            res_data.element( key, data.get( key ) );
-        }
-        res.element( "data", res_data );
+                .element("ref", ref)
+                .element("conv_id", convId)
+                .element("type", type)
+                .element("obj", obj)
+                .element("data", data);
         return res;
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -81,9 +79,10 @@ public class RequestOperation {
     private final String ref;
     private final Query type;
     private final String obj;
-    private final Map<String, Object> data;
+    private final JSONObject data;
 
     private enum Query {
+
         create, modify
     }
 }

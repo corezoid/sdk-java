@@ -1,4 +1,3 @@
-
 package com.middlewarebiz.conveyorapiutils.test;
 
 import com.middlewarebiz.conveyorapiutils.entity.ResponseOperation;
@@ -8,14 +7,16 @@ import java.util.*;
 import junit.framework.TestCase;
 
 import static junit.framework.Assert.assertEquals;
+import net.sf.json.JSONObject;
 
 /**
  *
- * @author dn300986zav
+ * @author Middleware <support@middleware.biz>
  */
 public class UtiisTest extends TestCase {
-    public UtiisTest( String testName ) {
-        super( testName );
+
+    public UtiisTest(String testName) {
+        super(testName);
     }
 
     @Override
@@ -36,30 +37,30 @@ public class UtiisTest extends TestCase {
         String key = "tgGsR8FTuLXzzVBsp3rngeSgOB2E2pMFJDwAXarbrs92GmLiiy";
         String time = "1389956320";
         String content = "{\n"
-                + "   \"ops\":[\n"
-                + "      {\n"
-                + "         \"ref\":null,\n"
-                + "         \"type\":\"data\",\n"
-                + "         \"obj_id\":\"52d8d74610e87b10d98c8d90\",\n"
-                + "         \"conv_id\":\"270\",\n"
-                + "         \"node_id\":\"52d837d210e87b10d979e98c\",\n"
-                + "         \"data\":{\n"
-                + "            \"id\":1077413\n"
-                + "         },\n"
-                + "         \"extra\":{\n"
-                + "            \"id\":\"1412737\",\n"
-                + "            \"hide_products\":\"N\",\n"
-                + "            \"properties\":\"Y\",\n"
-                + "            \"show_all\":\"Y\",\n"
-                + "            \"codeProduct\" : \"CRED\" \n"
-                + "         }\n"
-                + "      }\n"
-                + "   ]\n"
-                + "}";
+                         + "   \"ops\":[\n"
+                         + "      {\n"
+                         + "         \"ref\":null,\n"
+                         + "         \"type\":\"data\",\n"
+                         + "         \"obj_id\":\"52d8d74610e87b10d98c8d90\",\n"
+                         + "         \"conv_id\":\"270\",\n"
+                         + "         \"node_id\":\"52d837d210e87b10d979e98c\",\n"
+                         + "         \"data\":{\n"
+                         + "            \"id\":1077413\n"
+                         + "         },\n"
+                         + "         \"extra\":{\n"
+                         + "            \"id\":\"1412737\",\n"
+                         + "            \"hide_products\":\"N\",\n"
+                         + "            \"properties\":\"Y\",\n"
+                         + "            \"show_all\":\"Y\",\n"
+                         + "            \"codeProduct\" : \"CRED\" \n"
+                         + "         }\n"
+                         + "      }\n"
+                         + "   ]\n"
+                         + "}";
         boolean expResult = true;
-        boolean result = ConveyorMessage.checkSign( sign, key, time, content );
-        assertEquals( expResult, result );
-        System.out.println( ">>checkSignTrue :\t" + result );
+        boolean result = ConveyorMessage.checkSign(sign, key, time, content);
+        assertEquals(expResult, result);
+        System.out.println(">>checkSignTrue :\t" + result);
 
     }
 
@@ -71,66 +72,142 @@ public class UtiisTest extends TestCase {
         String key = "tgGsR8FTuLXzzVBsp3rngeSgOB2E2pMFJDwAXarbrs92GmLiiy";
         String time = "1389956320";
         String content = "{\n"
-                + "   \"ops\":[\n"
-                + "      {\n"
-                + "         \"ref\":null,\n"
-                + "         \"type\":\"data\",\n"
-                + "         \"obj_id\":\"52d8d74610e87b10d98c8d90\",\n"
-                + "         \"conv_id\":\"270\",\n"
-                + "         \"node_id\":\"52d837d210e87b10d979e98c\",\n"
-                + "         \"data\":{\n"
-                + "            \"id\":1077413\n"
-                + "         },\n"
-                + "         \"extra\":{\n"
-                + "            \"id\":\"1412737\",\n"
-                + "            \"hide_products\":\"N\",\n"
-                + "            \"properties\":\"Y\",\n"
-                + "            \"show_all\":\"Y\",\n"
-                + "            \"codeProduct\" : \"CRED\" \n"
-                + "         }\n"
-                + "      }\n"
-                + "   ]\n"
-                + "}";
+                         + "   \"ops\":[\n"
+                         + "      {\n"
+                         + "         \"ref\":null,\n"
+                         + "         \"type\":\"data\",\n"
+                         + "         \"obj_id\":\"52d8d74610e87b10d98c8d90\",\n"
+                         + "         \"conv_id\":\"270\",\n"
+                         + "         \"node_id\":\"52d837d210e87b10d979e98c\",\n"
+                         + "         \"data\":{\n"
+                         + "            \"id\":1077413\n"
+                         + "         },\n"
+                         + "         \"extra\":{\n"
+                         + "            \"id\":\"1412737\",\n"
+                         + "            \"hide_products\":\"N\",\n"
+                         + "            \"properties\":\"Y\",\n"
+                         + "            \"show_all\":\"Y\",\n"
+                         + "            \"codeProduct\" : \"CRED\" \n"
+                         + "         }\n"
+                         + "      }\n"
+                         + "   ]\n"
+                         + "}";
         boolean expResult = false;
-        boolean result = ConveyorMessage.checkSign( sign, key, time, content );
-        assertEquals( expResult, result );
-        System.out.println( ">>checkSignFalse :\t" + result );
+        boolean result = ConveyorMessage.checkSign(sign, key, time, content);
+        assertEquals(expResult, result);
+        System.out.println(">>checkSignFalse :\t" + result);
 
     }
 
     /**
-     * Parse conveyor answer  test
+     * Parse conveyor answer test
+     *
      * @throws Exception
      */
     public void testCheckAnswerReturnsNotEmptyMap() throws Exception {
         String answerOk = "{\n"
-                + "    \"request_proc\":\"ok\",\n"
-                + "    \"ops\":[\n"
-                + "   {\"id\":\"\",\"proc\":\"ok\",\"obj\":\"task\",\"ref\":\"PB11345969838\",\"obj_id\":\"52e266a05f845f6ec484d611\"}\n"
-                + "    ]\n"
-                + "}";
-        Map<String, String> map = ConveyorMessage.parseAnswer( answerOk );
-        assertEquals( true, !map.isEmpty() );
-        System.out.println( ">>testCheckAnswerReturnsNotEmptyMap :\t" + map.toString() );
+                          + "    \"request_proc\":\"ok\",\n"
+                          + "    \"ops\":[\n"
+                          + "   {\"id\":\"\",\"proc\":\"ok\",\"obj\":\"task\",\"ref\":\"PB11345969838\",\"obj_id\":\"52e266a05f845f6ec484d611\"}\n"
+                          + "    ]\n"
+                          + "}";
+        Map<String, String> map = ConveyorMessage.parseAnswer(answerOk);
+        assertEquals(true, !map.isEmpty());
+        System.out.println(">>testCheckAnswerReturnsNotEmptyMap :\t" + map.toString());
 
     }
 
     /**
-     * Parsing conveyor answer  test throws exception
+     * Parsing conveyor answer test throws exception
+     *
      * @throws Exception
      */
     public void testcheckAnswerShouldThrowException() throws Exception {
         String answerFail = "{\n"
-                + "    \"request_proc\":\"fail\",\n"
-                + "    \"ops\":[\n"
-                + "    {\"id\":\"\",\"proc\":\"ok\",\"obj\":\"task\",\"ref\":\"PB11345969838\",\"obj_id\":\"52e266a05f845f6ec484d611\"}\n"
-                + "    ]\n"
-                + "}";
+                            + "    \"request_proc\":\"fail\",\n"
+                            + "    \"ops\":[\n"
+                            + "    {\"id\":\"\",\"proc\":\"ok\",\"obj\":\"task\",\"ref\":\"PB11345969838\",\"obj_id\":\"52e266a05f845f6ec484d611\"}\n"
+                            + "    ]\n"
+                            + "}";
         try {
-            Map<String, String> map = ConveyorMessage.parseAnswer( answerFail );
-            fail( "Exception was expected" );
-        } catch ( Exception ex ) {
-            System.out.println( ">>testcheckAnswerShouldThrowException :\t" + ex.getMessage() );
+            Map<String, String> map = ConveyorMessage.parseAnswer(answerFail);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testcheckAnswerShouldThrowException :\t" + ex.getMessage());
+        }
+
+    }
+
+    /**
+     * Operation builder exceptions test
+     */
+    public void testOperationBuilderShouldThrowEsception() {
+        JSONObject res_data = new JSONObject()
+                .element("id", "1")
+                .element("test", "2");
+        String conv_id = "11";
+        String ref = "22";
+        // response
+        try {
+            ResponseOperation.ok(null, ref, res_data);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testResponseOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
+        }
+        try {
+            ResponseOperation.ok("", ref, res_data);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testResponseOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
+        }
+        try {
+            ResponseOperation.ok(conv_id, null, res_data);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testResponseOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
+        }
+        try {
+            ResponseOperation.ok(conv_id, "", res_data);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testResponseOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
+        }
+        try {
+            ResponseOperation.ok(conv_id, ref, null);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testResponseOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
+        }
+        // request
+        try {
+            RequestOperation.create(null, ref, res_data);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testRequestOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
+        }
+        try {
+            RequestOperation.create("", ref, res_data);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testRequestOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
+        }
+        try {
+            RequestOperation.create(conv_id, null, res_data);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testRequestOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
+        }
+        try {
+            RequestOperation.create(conv_id, "", res_data);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testRequestOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
+        }
+        try {
+            RequestOperation.create(conv_id, ref, null);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testRequestOperationBuilderShouldThrowEsception :\t" + ex.getMessage());
         }
 
     }
@@ -140,36 +217,79 @@ public class UtiisTest extends TestCase {
      */
     public void testGetConAnswerMessage() {
 
-        Map<String, Object> res_data = new LinkedHashMap<String, Object>();
-        res_data.put( "id", "1" );
-        res_data.put( "test", "2" );
+        JSONObject res_data = new JSONObject()
+                .element("id", "1")
+                .element("test", "2");
         String conv_id = "11";
         String ref = "22";
-        String body = ConveyorMessage.response( Arrays.asList( ResponseOperation.ok( conv_id, ref, res_data ) ) );
-        System.out.println( ">>testGetConAnswerMessage :" );
-        System.out.println( "body \t\t" + body );
+        String body = ConveyorMessage.response(Arrays.asList(ResponseOperation.ok(conv_id, ref, res_data)));
+        System.out.println(">>testGetConAnswerMessage :");
+        System.out.println("body \t\t" + body);
         String expBody = "{\"request_proc\":\"ok\",\"ops\":[{\"ref\":\"22\",\"conv_id\":\"11\",\"proc\":\"ok\",\"res_data\":{\"id\":\"1\",\"test\":\"2\"}}]}";
-        assertEquals( expBody, body );
+        assertEquals(expBody, body);
 
     }
 
     /**
-     * Requst builder test
+     * Requst builder tests
      */
     public void testGetConvQueryMessage() {
-        Map<String, Object> data = new HashMap<String, Object>();
-        data.put( "phone", "1" );
-        data.put( "card", "2" );
+        JSONObject data = new JSONObject()
+                .element("phone", "1")
+                .element("card", "2");
         String ref = "11";
         String conv_id = "1234";
         String key = "123";
         String apiLogin = "12345";
-        ConveyorMessage mes = ConveyorMessage.request( key, apiLogin, Arrays.asList( RequestOperation.create( conv_id, ref, data ) ) );
-        System.out.println( ">>testGetConvQueryMessage :" );
-        System.out.println( "body \t\t" + mes.body );
+        ConveyorMessage mes = ConveyorMessage.request(key, apiLogin, Arrays.asList(RequestOperation.create(conv_id, ref, data)));
+        System.out.println(">>testGetConvQueryMessage :");
+        System.out.println("body \t\t" + mes.body);
         System.out.println("url \t\t " + mes.url);
         String expBody = "{\"ops\":[{\"ref\":\"11\",\"conv_id\":\"1234\",\"type\":\"create\",\"obj\":\"task\",\"data\":{\"phone\":\"1\",\"card\":\"2\"}}]}";
-        assertEquals( expBody, mes.body );
+        assertEquals(expBody, mes.body);
 
+    }
+/**
+ * MessageBuilder Exceptions test
+ */
+    public void testConveyorQueryShouldThrowException() {
+        JSONObject data = new JSONObject()
+                .element("phone", "1")
+                .element("card", "2");
+        String ref = "11";
+        String conv_id = "1234";
+        String apiSecret = "1234";
+        String apiLogin = "12345";
+        List<RequestOperation> operations = Arrays.asList(RequestOperation.create(conv_id, ref, data));
+        try {
+            ConveyorMessage mes = ConveyorMessage.request(null, apiLogin, operations);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
+        }
+        try {
+            ConveyorMessage mes = ConveyorMessage.request("", apiLogin, operations);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
+        }
+        try {
+            ConveyorMessage mes = ConveyorMessage.request(apiSecret, null, operations);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
+        }
+        try {
+            ConveyorMessage mes = ConveyorMessage.request(apiSecret, "", operations);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
+        }
+        try {
+            ConveyorMessage mes = ConveyorMessage.request(apiSecret, apiLogin, null);
+            fail("Exception was expected");
+        } catch (Exception ex) {
+            System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
+        }
     }
 }
