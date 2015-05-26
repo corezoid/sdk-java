@@ -1,8 +1,8 @@
-package com.middlewarebiz.conveyorapiutils.test;
+package com.corezoid.sdk.test;
 
-import com.middlewarebiz.conveyorapiutils.entity.ResponseOperation;
-import com.middlewarebiz.conveyorapiutils.entity.ConveyorMessage;
-import com.middlewarebiz.conveyorapiutils.entity.RequestOperation;
+import com.corezoid.sdk.entity.ResponseOperation;
+import com.corezoid.sdk.entity.CorezoidMessage;
+import com.corezoid.sdk.entity.RequestOperation;
 import java.util.*;
 import junit.framework.TestCase;
 
@@ -11,7 +11,7 @@ import net.sf.json.JSONObject;
 
 /**
  *
- * @author Middleware <support@middleware.biz>
+ * @author Corezoid <support@corezoid.com>
  */
 public class UtiisTest extends TestCase {
 
@@ -58,7 +58,7 @@ public class UtiisTest extends TestCase {
                          + "   ]\n"
                          + "}";
         boolean expResult = true;
-        boolean result = ConveyorMessage.checkSign(sign, key, time, content);
+        boolean result = CorezoidMessage.checkSign(sign, key, time, content);
         assertEquals(expResult, result);
         System.out.println(">>checkSignTrue :\t" + result);
 
@@ -93,7 +93,7 @@ public class UtiisTest extends TestCase {
                          + "   ]\n"
                          + "}";
         boolean expResult = false;
-        boolean result = ConveyorMessage.checkSign(sign, key, time, content);
+        boolean result = CorezoidMessage.checkSign(sign, key, time, content);
         assertEquals(expResult, result);
         System.out.println(">>checkSignFalse :\t" + result);
 
@@ -111,7 +111,7 @@ public class UtiisTest extends TestCase {
                           + "   {\"id\":\"\",\"proc\":\"ok\",\"obj\":\"task\",\"ref\":\"PB11345969838\",\"obj_id\":\"52e266a05f845f6ec484d611\"}\n"
                           + "    ]\n"
                           + "}";
-        Map<String, String> map = ConveyorMessage.parseAnswer(answerOk);
+        Map<String, String> map = CorezoidMessage.parseAnswer(answerOk);
         assertEquals(true, !map.isEmpty());
         System.out.println(">>testCheckAnswerReturnsNotEmptyMap :\t" + map.toString());
 
@@ -130,7 +130,7 @@ public class UtiisTest extends TestCase {
                             + "    ]\n"
                             + "}";
         try {
-            Map<String, String> map = ConveyorMessage.parseAnswer(answerFail);
+            Map<String, String> map = CorezoidMessage.parseAnswer(answerFail);
             fail("Exception was expected");
         } catch (Exception ex) {
             System.out.println(">>testcheckAnswerShouldThrowException :\t" + ex.getMessage());
@@ -222,7 +222,7 @@ public class UtiisTest extends TestCase {
                 .element("test", "2");
         String conv_id = "11";
         String ref = "22";
-        String body = ConveyorMessage.response(Arrays.asList(ResponseOperation.ok(conv_id, ref, res_data)));
+        String body = CorezoidMessage.response(Arrays.asList(ResponseOperation.ok(conv_id, ref, res_data)));
         System.out.println(">>testGetConAnswerMessage :");
         System.out.println("body \t\t" + body);
         String expBody = "{\"request_proc\":\"ok\",\"ops\":[{\"ref\":\"22\",\"conv_id\":\"11\",\"proc\":\"ok\",\"res_data\":{\"id\":\"1\",\"test\":\"2\"}}]}";
@@ -241,7 +241,7 @@ public class UtiisTest extends TestCase {
         String conv_id = "1234";
         String key = "123";
         String apiLogin = "12345";
-        ConveyorMessage mes = ConveyorMessage.request(key, apiLogin, Arrays.asList(RequestOperation.create(conv_id, ref, data)));
+        CorezoidMessage mes = CorezoidMessage.request(key, apiLogin, Arrays.asList(RequestOperation.create(conv_id, ref, data)));
         System.out.println(">>testGetConvQueryMessage :");
         System.out.println("body \t\t" + mes.body);
         System.out.println("url \t\t " + mes.url);
@@ -262,31 +262,31 @@ public class UtiisTest extends TestCase {
         String apiLogin = "12345";
         List<RequestOperation> operations = Arrays.asList(RequestOperation.create(conv_id, ref, data));
         try {
-            ConveyorMessage mes = ConveyorMessage.request(null, apiLogin, operations);
+            CorezoidMessage mes = CorezoidMessage.request(null, apiLogin, operations);
             fail("Exception was expected");
         } catch (Exception ex) {
             System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
         }
         try {
-            ConveyorMessage mes = ConveyorMessage.request("", apiLogin, operations);
+            CorezoidMessage mes = CorezoidMessage.request("", apiLogin, operations);
             fail("Exception was expected");
         } catch (Exception ex) {
             System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
         }
         try {
-            ConveyorMessage mes = ConveyorMessage.request(apiSecret, null, operations);
+            CorezoidMessage mes = CorezoidMessage.request(apiSecret, null, operations);
             fail("Exception was expected");
         } catch (Exception ex) {
             System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
         }
         try {
-            ConveyorMessage mes = ConveyorMessage.request(apiSecret, "", operations);
+            CorezoidMessage mes = CorezoidMessage.request(apiSecret, "", operations);
             fail("Exception was expected");
         } catch (Exception ex) {
             System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
         }
         try {
-            ConveyorMessage mes = ConveyorMessage.request(apiSecret, apiLogin, null);
+            CorezoidMessage mes = CorezoidMessage.request(apiSecret, apiLogin, null);
             fail("Exception was expected");
         } catch (Exception ex) {
             System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());

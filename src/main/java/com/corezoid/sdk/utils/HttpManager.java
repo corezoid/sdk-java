@@ -1,6 +1,6 @@
-package com.middlewarebiz.conveyorapiutils.utils;
+package com.corezoid.sdk.utils;
 
-import com.middlewarebiz.conveyorapiutils.entity.ConveyorMessage;
+import com.corezoid.sdk.entity.CorezoidMessage;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
@@ -13,7 +13,7 @@ import org.apache.http.util.EntityUtils;
 import static org.apache.http.Consts.*;
 
 /**
- * @author Middleware <support@middleware.biz>
+ * @author Corezoid <support@corezoid.com>
  */
 public class HttpManager {
 //----------------------------------------------------------------------------------------------------------------------
@@ -49,13 +49,13 @@ public class HttpManager {
     /**
      * send request
      *
-     * @param request - request to conveyor
+     * @param message -  corezoid message
      * @return
      * @throws org.apache.http.HttpException
      */
-    public String send(ConveyorMessage request) throws HttpException {
-        HttpPost post = new HttpPost(request.url);
-        post.setEntity(new StringEntity(request.body, jsonUTF8));
+    public String send(CorezoidMessage message) throws HttpException {
+        HttpPost post = new HttpPost(message.url);
+        post.setEntity(new StringEntity(message.body, jsonUTF8));
         return sendBasic(post);
     }
 //----------------------------------------------------------------------------------------------------------------------

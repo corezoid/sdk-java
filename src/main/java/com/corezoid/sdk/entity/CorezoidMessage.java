@@ -1,4 +1,4 @@
-package com.middlewarebiz.conveyorapiutils.entity;
+package com.corezoid.sdk.entity;
 
 import java.security.*;
 import java.util.*;
@@ -8,9 +8,9 @@ import net.sf.json.*;
 /**
  * Message
  *
- * @author Middleware <support@middleware.biz>
+ * @author Corezoid <support@corezoid.com>
  */
-public final class ConveyorMessage {
+public final class CorezoidMessage {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -44,7 +44,7 @@ public final class ConveyorMessage {
      * @param operations
      * @return
      */
-    public static ConveyorMessage request(String apiSecret, String apiLogin,
+    public static CorezoidMessage request(String apiSecret, String apiLogin,
                                           List<RequestOperation> operations) {
         if (apiSecret == null || apiSecret.equals("")) {
             throw new IllegalArgumentException("apiSecret is null or empty");
@@ -65,7 +65,7 @@ public final class ConveyorMessage {
         String content = obj.toString();
         String unixTime = String.valueOf(System.currentTimeMillis() / 1000);
 
-        return new ConveyorMessage(content, unixTime, apiSecret, apiLogin);
+        return new CorezoidMessage(content, unixTime, apiSecret, apiLogin);
     }
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -80,8 +80,8 @@ public final class ConveyorMessage {
      */
     public static boolean checkSign(String sign, String apiSecret, String time,
                                     String content) {
-        ConveyorMessage resivedSign = new ConveyorMessage(sign);
-        ConveyorMessage calculatedSign = new ConveyorMessage(content, time, apiSecret, "");
+        CorezoidMessage resivedSign = new CorezoidMessage(sign);
+        CorezoidMessage calculatedSign = new CorezoidMessage(content, time, apiSecret, "");
         return resivedSign.equals(calculatedSign);
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ public final class ConveyorMessage {
     }
 
 //----------------------------------------------------------------------------------------------------------------------
-    private ConveyorMessage(String body, String time, String apiSecret,
+    private CorezoidMessage(String body, String time, String apiSecret,
                             String apiLogin) {
         this.body = body;
         this.time = time;
@@ -127,7 +127,7 @@ public final class ConveyorMessage {
     }
 //----------------------------------------------------------------------------------------------------------------------
 
-    private ConveyorMessage(String signCode) {
+    private CorezoidMessage(String signCode) {
         this.body = null;
         this.time = null;
         this.apiSecret = null;
@@ -147,7 +147,7 @@ public final class ConveyorMessage {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        ConveyorMessage other = (ConveyorMessage) obj;
+        CorezoidMessage other = (CorezoidMessage) obj;
         return this.signCode.equals(other.signCode);
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -212,7 +212,7 @@ public final class ConveyorMessage {
     private static final String proc = "proc";
     private static final String ref = "ref";
     private static final String slash = "/";
-    private static final String host = "https://www.middleware.biz";
+    private static final String host = "https://www.corezoid.com";
     private static final String version = "1";
     private static final String format = "json";
 

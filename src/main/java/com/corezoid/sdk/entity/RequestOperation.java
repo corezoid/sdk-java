@@ -1,11 +1,11 @@
-package com.middlewarebiz.conveyorapiutils.entity;
+package com.corezoid.sdk.entity;
 
 import net.sf.json.JSONObject;
 
 /**
  * Request operation
  *
- * @author Middleware <support@middleware.biz>
+ * @author Corezoid <support@corezoid.com>
  */
 public class RequestOperation {
 //----------------------------------------------------------------------------------------------------------------------
