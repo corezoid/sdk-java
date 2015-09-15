@@ -37,26 +37,26 @@ public class UtiisTest extends TestCase {
         String key = "tgGsR8FTuLXzzVBsp3rngeSgOB2E2pMFJDwAXarbrs92GmLiiy";
         String time = "1389956320";
         String content = "{\n"
-                         + "   \"ops\":[\n"
-                         + "      {\n"
-                         + "         \"ref\":null,\n"
-                         + "         \"type\":\"data\",\n"
-                         + "         \"obj_id\":\"52d8d74610e87b10d98c8d90\",\n"
-                         + "         \"conv_id\":\"270\",\n"
-                         + "         \"node_id\":\"52d837d210e87b10d979e98c\",\n"
-                         + "         \"data\":{\n"
-                         + "            \"id\":1077413\n"
-                         + "         },\n"
-                         + "         \"extra\":{\n"
-                         + "            \"id\":\"1412737\",\n"
-                         + "            \"hide_products\":\"N\",\n"
-                         + "            \"properties\":\"Y\",\n"
-                         + "            \"show_all\":\"Y\",\n"
-                         + "            \"codeProduct\" : \"CRED\" \n"
-                         + "         }\n"
-                         + "      }\n"
-                         + "   ]\n"
-                         + "}";
+                + "   \"ops\":[\n"
+                + "      {\n"
+                + "         \"ref\":null,\n"
+                + "         \"type\":\"data\",\n"
+                + "         \"obj_id\":\"52d8d74610e87b10d98c8d90\",\n"
+                + "         \"conv_id\":\"270\",\n"
+                + "         \"node_id\":\"52d837d210e87b10d979e98c\",\n"
+                + "         \"data\":{\n"
+                + "            \"id\":1077413\n"
+                + "         },\n"
+                + "         \"extra\":{\n"
+                + "            \"id\":\"1412737\",\n"
+                + "            \"hide_products\":\"N\",\n"
+                + "            \"properties\":\"Y\",\n"
+                + "            \"show_all\":\"Y\",\n"
+                + "            \"codeProduct\" : \"CRED\" \n"
+                + "         }\n"
+                + "      }\n"
+                + "   ]\n"
+                + "}";
         boolean expResult = true;
         boolean result = CorezoidMessage.checkSign(sign, key, time, content);
         assertEquals(expResult, result);
@@ -72,26 +72,26 @@ public class UtiisTest extends TestCase {
         String key = "tgGsR8FTuLXzzVBsp3rngeSgOB2E2pMFJDwAXarbrs92GmLiiy";
         String time = "1389956320";
         String content = "{\n"
-                         + "   \"ops\":[\n"
-                         + "      {\n"
-                         + "         \"ref\":null,\n"
-                         + "         \"type\":\"data\",\n"
-                         + "         \"obj_id\":\"52d8d74610e87b10d98c8d90\",\n"
-                         + "         \"conv_id\":\"270\",\n"
-                         + "         \"node_id\":\"52d837d210e87b10d979e98c\",\n"
-                         + "         \"data\":{\n"
-                         + "            \"id\":1077413\n"
-                         + "         },\n"
-                         + "         \"extra\":{\n"
-                         + "            \"id\":\"1412737\",\n"
-                         + "            \"hide_products\":\"N\",\n"
-                         + "            \"properties\":\"Y\",\n"
-                         + "            \"show_all\":\"Y\",\n"
-                         + "            \"codeProduct\" : \"CRED\" \n"
-                         + "         }\n"
-                         + "      }\n"
-                         + "   ]\n"
-                         + "}";
+                + "   \"ops\":[\n"
+                + "      {\n"
+                + "         \"ref\":null,\n"
+                + "         \"type\":\"data\",\n"
+                + "         \"obj_id\":\"52d8d74610e87b10d98c8d90\",\n"
+                + "         \"conv_id\":\"270\",\n"
+                + "         \"node_id\":\"52d837d210e87b10d979e98c\",\n"
+                + "         \"data\":{\n"
+                + "            \"id\":1077413\n"
+                + "         },\n"
+                + "         \"extra\":{\n"
+                + "            \"id\":\"1412737\",\n"
+                + "            \"hide_products\":\"N\",\n"
+                + "            \"properties\":\"Y\",\n"
+                + "            \"show_all\":\"Y\",\n"
+                + "            \"codeProduct\" : \"CRED\" \n"
+                + "         }\n"
+                + "      }\n"
+                + "   ]\n"
+                + "}";
         boolean expResult = false;
         boolean result = CorezoidMessage.checkSign(sign, key, time, content);
         assertEquals(expResult, result);
@@ -106,11 +106,11 @@ public class UtiisTest extends TestCase {
      */
     public void testCheckAnswerReturnsNotEmptyMap() throws Exception {
         String answerOk = "{\n"
-                          + "    \"request_proc\":\"ok\",\n"
-                          + "    \"ops\":[\n"
-                          + "   {\"id\":\"\",\"proc\":\"ok\",\"obj\":\"task\",\"ref\":\"PB11345969838\",\"obj_id\":\"52e266a05f845f6ec484d611\"}\n"
-                          + "    ]\n"
-                          + "}";
+                + "    \"request_proc\":\"ok\",\n"
+                + "    \"ops\":[\n"
+                + "   {\"id\":\"\",\"proc\":\"ok\",\"obj\":\"task\",\"ref\":\"PB11345969838\",\"obj_id\":\"52e266a05f845f6ec484d611\"}\n"
+                + "    ]\n"
+                + "}";
         Map<String, String> map = CorezoidMessage.parseAnswer(answerOk);
         assertEquals(true, !map.isEmpty());
         System.out.println(">>testCheckAnswerReturnsNotEmptyMap :\t" + map.toString());
@@ -124,11 +124,11 @@ public class UtiisTest extends TestCase {
      */
     public void testcheckAnswerShouldThrowException() throws Exception {
         String answerFail = "{\n"
-                            + "    \"request_proc\":\"fail\",\n"
-                            + "    \"ops\":[\n"
-                            + "    {\"id\":\"\",\"proc\":\"ok\",\"obj\":\"task\",\"ref\":\"PB11345969838\",\"obj_id\":\"52e266a05f845f6ec484d611\"}\n"
-                            + "    ]\n"
-                            + "}";
+                + "    \"request_proc\":\"fail\",\n"
+                + "    \"ops\":[\n"
+                + "    {\"id\":\"\",\"proc\":\"ok\",\"obj\":\"task\",\"ref\":\"PB11345969838\",\"obj_id\":\"52e266a05f845f6ec484d611\"}\n"
+                + "    ]\n"
+                + "}";
         try {
             Map<String, String> map = CorezoidMessage.parseAnswer(answerFail);
             fail("Exception was expected");
@@ -233,7 +233,7 @@ public class UtiisTest extends TestCase {
     /**
      * Requst builder tests
      */
-    public void testGetConvQueryMessage() {
+    public void testGetConvQueryCreateMessage() {
         JSONObject data = new JSONObject()
                 .element("phone", "1")
                 .element("card", "2");
@@ -242,16 +242,54 @@ public class UtiisTest extends TestCase {
         String key = "123";
         String apiLogin = "12345";
         CorezoidMessage mes = CorezoidMessage.request(key, apiLogin, Arrays.asList(RequestOperation.create(conv_id, ref, data)));
-        System.out.println(">>testGetConvQueryMessage :");
+        System.out.println(">>testGetConvQueryCreateMessage :");
         System.out.println("body \t\t" + mes.body);
         System.out.println("url \t\t " + mes.url);
         String expBody = "{\"ops\":[{\"ref\":\"11\",\"conv_id\":\"1234\",\"type\":\"create\",\"obj\":\"task\",\"data\":{\"phone\":\"1\",\"card\":\"2\"}}]}";
         assertEquals(expBody, mes.body);
 
     }
-/**
- * MessageBuilder Exceptions test
- */
+    /**
+     * Requst builder tests
+     */
+    public void testGetConvQueryModifyRefMessage() {
+        JSONObject data = new JSONObject()
+                .element("phone", "1")
+                .element("card", "2");
+        String ref = "11";
+        String conv_id = "1234";
+        String key = "123";
+        String apiLogin = "12345";
+        CorezoidMessage mes = CorezoidMessage.request(key, apiLogin, Arrays.asList(RequestOperation.modifyRef(conv_id, ref, data)));
+        System.out.println(">>testGetConvQueryModifyRefMessage :");
+        System.out.println("body \t\t" + mes.body);
+        System.out.println("url \t\t " + mes.url);
+        String expBody = "{\"ops\":[{\"ref\":\"11\",\"conv_id\":\"1234\",\"type\":\"modify\",\"obj\":\"task\",\"data\":{\"phone\":\"1\",\"card\":\"2\"}}]}";
+        assertEquals(expBody, mes.body);
+
+    }
+    /**
+     * Requst builder tests
+     */
+    public void testGetConvQueryModifyIdMessage() {
+        JSONObject data = new JSONObject()
+                .element("phone", "1")
+                .element("card", "2");
+        String taskId = "11";
+        String conv_id = "1234";
+        String key = "123";
+        String apiLogin = "12345";
+        CorezoidMessage mes = CorezoidMessage.request(key, apiLogin, Arrays.asList(RequestOperation.modifyId(conv_id, taskId, data)));
+        System.out.println(">>testGetConvQueryModifyRefMessage :");
+        System.out.println("body \t\t" + mes.body);
+        System.out.println("url \t\t " + mes.url);
+        String expBody = "{\"ops\":[{\"obj_id\":\"11\",\"conv_id\":\"1234\",\"type\":\"modify\",\"obj\":\"task\",\"data\":{\"phone\":\"1\",\"card\":\"2\"}}]}";
+        assertEquals(expBody, mes.body);
+
+    }
+    /**
+     * MessageBuilder Exceptions test
+     */
     public void testConveyorQueryShouldThrowException() {
         JSONObject data = new JSONObject()
                 .element("phone", "1")
@@ -290,6 +328,37 @@ public class UtiisTest extends TestCase {
             fail("Exception was expected");
         } catch (Exception ex) {
             System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
+        }
+    }
+    public void testRequestOperationShouldThrowException(){
+        JSONObject data = new JSONObject()
+                .element("phone", "1")
+                .element("card", "2");
+        String ref = "11";
+        String taskId = "12";
+        String conv_id = "1234";
+        String apiSecret = "1234";
+        String apiLogin = "12345";
+        RequestOperation op = null;
+        try {
+            op = RequestOperation.modifyId(conv_id, null, data);
+        }catch (Exception ex){
+            System.out.println(">>testRequestOperationShouldThrowException :\t" + ex.getMessage());
+        }
+        try {
+            op = RequestOperation.modifyId(conv_id, "", data);
+        }catch (Exception ex){
+            System.out.println(">>testRequestOperationShouldThrowException :\t" + ex.getMessage());
+        }
+        try {
+            op = RequestOperation.modifyRef(conv_id, null, data);
+        }catch (Exception ex){
+            System.out.println(">>testRequestOperationShouldThrowException :\t" + ex.getMessage());
+        }
+        try {
+            op = RequestOperation.modifyRef(conv_id, "", data);
+        }catch (Exception ex){
+            System.out.println(">>testRequestOperationShouldThrowException :\t" + ex.getMessage());
         }
     }
 }
