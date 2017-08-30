@@ -1,8 +1,10 @@
 package com.corezoid.sdk.entity;
 
+import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.util.*;
 import javax.xml.bind.DatatypeConverter;
+
 import net.sf.json.*;
 
 /**
@@ -72,10 +74,10 @@ public final class CorezoidMessage {
     /**
      * Check signature
      *
-     * @param sign - @QueruParam SIGNATURE from url
+     * @param sign      - @QueruParam SIGNATURE from url
      * @param apiSecret - api secret key
-     * @param time - @QueruParam GMT_UNIXTIME from url
-     * @param content - request body
+     * @param time      - @QueruParam GMT_UNIXTIME from url
+     * @param content   - request body
      * @return true if signature is valid, or false
      */
     public static boolean checkSign(String sign, String apiSecret, String time,
@@ -110,7 +112,7 @@ public final class CorezoidMessage {
         return result;
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     private CorezoidMessage(String body, String time, String apiSecret,
                             String apiLogin) {
         this.body = body;
@@ -164,24 +166,32 @@ public final class CorezoidMessage {
     }
 
 //----------------------------------------------------------------------------------------------------------------------
+
     /**
      * Genarate signature {SIGNATURE} = hex( sha1({GMT_UNIXTIME} + {API_SECRET}
      * + {CONTENT} + {API_SECRET}) )
      *
-     * @param time - time
+     * @param time      - time
      * @param apiSecret - apiSecret
-     * @param body - request body
+     * @param body      - request body
      * @return - signature
      */
     private static String generateSign(String time, String apiSecret,
                                        String body) {
         MessageDigest sha1 = messageDigest.get();
         sha1.reset();
-        byte[] bytes = (time + apiSecret + body + apiSecret).getBytes();
-        String sha1hex = DatatypeConverter.printHexBinary(sha1.digest(bytes)).toLowerCase();
+        byte[] bytes;
+        String sha1hex;
+        try {
+            bytes = (time + apiSecret + body + apiSecret).getBytes("UTF-8");
+            sha1hex = DatatypeConverter.printHexBinary(sha1.digest(bytes)).toLowerCase();
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("generateSign error", e);
+        }
         return sha1hex;
     }
-//----------------------------------------------------------------------------------------------------------------------
+
+    //----------------------------------------------------------------------------------------------------------------------
     private static final ThreadLocal<MessageDigest> messageDigest = new ThreadLocal<MessageDigest>() {
         @Override
         protected MessageDigest initialValue() {
@@ -193,7 +203,7 @@ public final class CorezoidMessage {
         }
     };
 
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     private static JSONObject parseJson(Object content) throws Exception {
         try {
             return (JSONObject) JSONSerializer.toJSON(content);
@@ -201,7 +211,8 @@ public final class CorezoidMessage {
             throw new Exception(String.format("json parsing error. %s", ex.getMessage()));
         }
     }
-//----------------------------------------------------------------------------------------------------------------------
+
+    //----------------------------------------------------------------------------------------------------------------------
     public final String body;
     public final String url;
     private final String time;
