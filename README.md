@@ -1,3 +1,3 @@
 # SDK-JAVA
 
-Documentation https://www.corezoid.com/how_to_use/api/en/upload_data/java.html
+Documentation https://doc.corezoid.com/en/api/upload_modify.html#java
