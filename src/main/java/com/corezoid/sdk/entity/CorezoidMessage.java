@@ -40,13 +40,22 @@ public final class CorezoidMessage {
 
     /**
      * Builder for request message
-     *
+     */
+    public static CorezoidMessage request(String apiSecret, String apiLogin,
+                                      List<RequestOperation> operations) {
+        return request(host, apiSecret, apiLogin, operations);
+    }
+//----------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Builder for request message
+     * @param host override default host value
      * @param apiSecret
      * @param apiLogin
      * @param operations
      * @return
      */
-    public static CorezoidMessage request(String apiSecret, String apiLogin,
+    public static CorezoidMessage request(String host, String apiSecret, String apiLogin,
                                           List<RequestOperation> operations) {
         if (apiSecret == null || apiSecret.equals("")) {
             throw new IllegalArgumentException("apiSecret is null or empty");
@@ -67,7 +76,7 @@ public final class CorezoidMessage {
         String content = obj.toString();
         String unixTime = String.valueOf(System.currentTimeMillis() / 1000);
 
-        return new CorezoidMessage(content, unixTime, apiSecret, apiLogin);
+        return new CorezoidMessage(content, unixTime, apiSecret, apiLogin, host);
     }
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -115,12 +124,18 @@ public final class CorezoidMessage {
     //----------------------------------------------------------------------------------------------------------------------
     private CorezoidMessage(String body, String time, String apiSecret,
                             String apiLogin) {
+        this(body, time, apiSecret, apiLogin, host);
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------
+    private CorezoidMessage(String body, String time, String apiSecret,
+                            String apiLogin, String baseUri) {
         this.body = body;
         this.time = time;
         this.apiSecret = apiSecret;
         this.signCode = generateSign(time, apiSecret, body);
         this.url = new StringBuilder()
-                .append(host).append("/api/")
+                .append(baseUri).append("/api/")
                 .append(version).append(slash)
                 .append(format).append(slash)
                 .append(apiLogin).append(slash)
