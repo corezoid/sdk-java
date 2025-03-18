@@ -5,6 +5,7 @@ import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.ContentType;
@@ -12,12 +13,10 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
-import org.apache.hc.core5.http.io.entity.EntityUtils;
-import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 
 import java.nio.charset.StandardCharsets;
 
@@ -45,7 +44,6 @@ public class HttpManager {
 
         httpClient = HttpClients.custom()
                 .setConnectionManager(manager)
-                .setConnectionTimeToLive(TimeValue.ofMilliseconds(connectionTimeout))
                 .setDefaultRequestConfig(RequestConfig.custom()
                         .setResponseTimeout(Timeout.ofMilliseconds(answerTimeout))
                         .build())
