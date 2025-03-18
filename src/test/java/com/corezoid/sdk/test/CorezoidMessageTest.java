@@ -15,7 +15,8 @@ public class CorezoidMessageTest {
         CorezoidMessage message = CorezoidMessage.request("secret", "login", Collections.emptyList());
         assertNotNull(message);
         assertTrue(message.body.contains("ops"));
-        assertTrue(message.sign.length() > 0);
+        assertNotNull(message.url);
+        assertTrue(message.url.contains("api"));
     }
 
     @Test

@@ -64,8 +64,13 @@ public class CorezoidMessageIntegrationTest {
         assertTrue(message.body.length() > 0);
         
         // Verify signature checking
+        // Extract sign from URL
+        String url = message.url;
+        String[] parts = url.split("/");
+        String sign = parts[parts.length - 1];
+        
         assertTrue(CorezoidMessage.checkSign(
-            message.sign,
+            sign,
             apiSecret,
             String.valueOf(System.currentTimeMillis() / 1000),
             message.body
