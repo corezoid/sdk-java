@@ -3,7 +3,7 @@ package com.corezoid.sdk.entity;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.util.*;
-import javax.xml.bind.DatatypeConverter;
+import java.util.HexFormat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -201,7 +201,7 @@ public final class CorezoidMessage {
         String sha1hex;
         try {
             bytes = (time + apiSecret + body + apiSecret).getBytes("UTF-8");
-            sha1hex = DatatypeConverter.printHexBinary(sha1.digest(bytes)).toLowerCase();
+            sha1hex = HexFormat.of().formatHex(sha1.digest(bytes)).toLowerCase();
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("generateSign error", e);
         }
@@ -219,15 +219,6 @@ public final class CorezoidMessage {
             }
         }
     };
-
-    //----------------------------------------------------------------------------------------------------------------------
-    private static JSONObject parseJson(Object content) throws Exception {
-        try {
-            return (JSONObject) JSONSerializer.toJSON(content);
-        } catch (Exception ex) {
-            throw new Exception(String.format("json parsing error. %s", ex.getMessage()));
-        }
-    }
 
     //----------------------------------------------------------------------------------------------------------------------
     public final String body;

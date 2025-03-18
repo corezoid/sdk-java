@@ -15,7 +15,11 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
-import static org.apache.http.Consts.*;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.message.BasicHeader;
+import org.apache.hc.client5.http.config.RequestConfig;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Corezoid <support@corezoid.com>
@@ -73,9 +77,9 @@ public class HttpManager {
             HttpEntity entity = response.getEntity();
             String body = "";
             if (entity != null) {
-                body = EntityUtils.toString(entity, UTF_8);
+                body = EntityUtils.toString(entity, StandardCharsets.UTF_8);
                 if (entity.getContentType() == null) {
-                    body = new String(body.getBytes(ISO_8859_1), UTF_8);
+                    body = new String(body.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
                 }
             }
             int code = response.getCode();
@@ -88,5 +92,5 @@ public class HttpManager {
         }
     }
 //----------------------------------------------------------------------------------------------------------------------
-    private static final ContentType jsonUTF8 = ContentType.create("application/json", "UTF-8");
+    private static final ContentType jsonUTF8 = ContentType.create("application/json", StandardCharsets.UTF_8);
 }
