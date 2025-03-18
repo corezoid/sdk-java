@@ -13,17 +13,27 @@ public class CorezoidMessageTest {
     public void testRequestCreation() {
         CorezoidMessage message = CorezoidMessage.request("secret", "login", Collections.emptyList());
         assertNotNull(message);
+        assertEquals("login", message.getApiLogin());
+        assertEquals("secret", message.getApiSecret());
     }
 
     @Test
     public void testResponseCreation() {
         String response = CorezoidMessage.response(Collections.emptyList());
         assertNotNull(response);
+        assertTrue(response.contains("ok"));
     }
 
     @Test
     public void testCheckSign() {
         boolean isValid = CorezoidMessage.checkSign("sign", "secret", "time", "content");
         assertFalse(isValid);
+    }
+
+    @Test
+    public void testParseAnswer() throws Exception {
+        String jsonString = "{\"request_proc\":\"ok\",\"ops\":[{\"ref\":\"123\",\"proc\":\"ok\"}]}";
+        Map<String, String> result = CorezoidMessage.parseAnswer(jsonString);
+        assertEquals("ok", result.get("123"));
     }
 }

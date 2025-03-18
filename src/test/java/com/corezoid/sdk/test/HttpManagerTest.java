@@ -8,8 +8,14 @@ public class HttpManagerTest {
 
     @Test
     public void testSend() {
-        HttpManager httpManager = new HttpManager();
+        HttpManager httpManager = new HttpManager(10, 1000, 1000);
         CorezoidMessage message = CorezoidMessage.request("secret", "login", Collections.emptyList());
         assertThrows(Exception.class, () -> httpManager.send(message));
+    }
+
+    @Test
+    public void testHttpManagerInitialization() {
+        HttpManager httpManager = new HttpManager(10, 1000, 1000);
+        assertNotNull(httpManager);
     }
 }

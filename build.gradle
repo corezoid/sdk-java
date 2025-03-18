@@ -5,7 +5,7 @@ plugins {
 group 'com.corezoid'
 version '2.4'
 
-sourceCompatibility = '23'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
