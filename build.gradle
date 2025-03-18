@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'com.corezoid'
+version '2.4'
+
+sourceCompatibility = '23'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'net.sf.json-lib:json-lib:2.4:jdk15'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.6'
+    testImplementation 'junit:junit:3.8.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+}
+
+test {
+    useJUnitPlatform()
+}
