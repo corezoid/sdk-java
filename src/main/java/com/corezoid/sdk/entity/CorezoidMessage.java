@@ -5,7 +5,9 @@ import java.security.*;
 import java.util.*;
 import javax.xml.bind.DatatypeConverter;
 
-import net.sf.json.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Message
@@ -25,16 +27,15 @@ public final class CorezoidMessage {
         if (operations == null) {
             throw new IllegalArgumentException("operations is null");
         }
-        JSONObject obj = new JSONObject();
-        obj.element(request_proc, ResultType.ok);
-        obj.element(ops, new JSONArray());
-        JSONArray jsOps = new JSONArray();
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode obj = mapper.createObjectNode();
+        obj.put(request_proc, ResultType.ok.name());
+        ArrayNode jsOps = mapper.createArrayNode();
         for (ResponseOperation op : operations) {
             jsOps.add(op.toJSONObject());
         }
-        obj.element(ops, jsOps);
-        String content = obj.toString();
-        return content;
+        obj.set(ops, jsOps);
+        return obj.toString();
     }
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -66,13 +67,13 @@ public final class CorezoidMessage {
         if (operations == null) {
             throw new IllegalArgumentException("operations is null");
         }
-        JSONObject obj = new JSONObject();
-        obj.element(ops, new JSONArray());
-        JSONArray jsOps = new JSONArray();
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode obj = mapper.createObjectNode();
+        ArrayNode jsOps = mapper.createArrayNode();
         for (RequestOperation op : operations) {
             jsOps.add(op.toJSONObject());
         }
-        obj.element(ops, jsOps);
+        obj.set(ops, jsOps);
         String content = obj.toString();
         String unixTime = String.valueOf(System.currentTimeMillis() / 1000);
 
@@ -105,17 +106,18 @@ public final class CorezoidMessage {
      * @throws Exception if packet processing was failed
      */
     public static Map<String, String> parseAnswer(String jsonString) throws Exception {
-        JSONObject obj = parseJson(jsonString);
-        String reqProc = obj.getString(request_proc);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode obj = (ObjectNode) mapper.readTree(jsonString);
+        String reqProc = obj.get(request_proc).asText();
         if (!reqProc.equals("ok")) {
             throw new Exception(String.format("Request processing failed, request_proc = %s ", reqProc));
         }
-        JSONArray operations = obj.getJSONArray(ops);
-        Map<String, String> result = new HashMap<String, String>();
+        ArrayNode operations = (ArrayNode) obj.get(ops);
+        Map<String, String> result = new HashMap<>();
         for (int i = 0; i < operations.size(); i++) {
-            JSONObject op = operations.getJSONObject(i);
-            String opRef = op.getString(ref);
-            String opProc = op.getString(proc);
+            ObjectNode op = (ObjectNode) operations.get(i);
+            String opRef = op.get(ref).asText();
+            String opProc = op.get(proc).asText();
             result.put(opRef, opProc);
         }
         return result;
