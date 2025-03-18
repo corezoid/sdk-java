@@ -23,7 +23,7 @@ public class HttpManager {
 
     /**
      *
-     * create PoolingClientConnectionManager
+     * create PoolingClientConnectionManager.
      *
      * @param maxCount max total connection, default max connection per route
      * @param connectionTimeout milliseconds
