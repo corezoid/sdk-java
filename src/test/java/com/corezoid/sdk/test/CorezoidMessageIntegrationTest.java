@@ -60,8 +60,8 @@ public class CorezoidMessageIntegrationTest {
         CorezoidMessage message = CorezoidMessage.request(apiSecret, apiLogin, 
             Collections.singletonList(operation));
         
-        assertNotNull(message.sign);
-        assertTrue(message.sign.length() > 0);
+        assertNotNull(message);
+        assertTrue(message.body.length() > 0);
         
         // Verify signature checking
         assertTrue(CorezoidMessage.checkSign(

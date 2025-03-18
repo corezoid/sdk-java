@@ -4,35 +4,36 @@ import com.corezoid.sdk.entity.ResponseOperation;
 import com.corezoid.sdk.entity.CorezoidMessage;
 import com.corezoid.sdk.entity.RequestOperation;
 import java.util.*;
-import junit.framework.TestCase;
 
-import static junit.framework.Assert.assertEquals;
-import net.sf.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  *
  * @author Corezoid <support@corezoid.com>
  */
-public class UtiisTest extends TestCase {
+public class UtiisTest {
+    
+    private ObjectMapper mapper = new ObjectMapper();
 
-    public UtiisTest(String testName) {
-        super(testName);
+    @BeforeEach
+    void setUp() throws Exception {
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @AfterEach
+    void tearDown() throws Exception {
     }
 
     /**
      * Valid signature check test
      */
-    public void testCheckSignTrue() {
+    @Test
+    void testCheckSignTrue() {
         String sign = "e01f19285c09c8eff449a60fef9dbc3c8f3915db";
         String key = "tgGsR8FTuLXzzVBsp3rngeSgOB2E2pMFJDwAXarbrs92GmLiiy";
         String time = "1389956320";
@@ -67,7 +68,8 @@ public class UtiisTest extends TestCase {
     /**
      * Invalid signature check test
      */
-    public void testCheckSignFalse() {
+    @Test
+    void testCheckSignFalse() {
         String sign = "1";
         String key = "tgGsR8FTuLXzzVBsp3rngeSgOB2E2pMFJDwAXarbrs92GmLiiy";
         String time = "1389956320";
@@ -104,7 +106,8 @@ public class UtiisTest extends TestCase {
      *
      * @throws Exception
      */
-    public void testCheckAnswerReturnsNotEmptyMap() throws Exception {
+    @Test
+    void testCheckAnswerReturnsNotEmptyMap() throws Exception {
         String answerOk = "{\n"
                 + "    \"request_proc\":\"ok\",\n"
                 + "    \"ops\":[\n"
@@ -112,7 +115,7 @@ public class UtiisTest extends TestCase {
                 + "    ]\n"
                 + "}";
         Map<String, String> map = CorezoidMessage.parseAnswer(answerOk);
-        assertEquals(true, !map.isEmpty());
+        assertTrue(!map.isEmpty());
         System.out.println(">>testCheckAnswerReturnsNotEmptyMap :\t" + map.toString());
 
     }
@@ -122,7 +125,8 @@ public class UtiisTest extends TestCase {
      *
      * @throws Exception
      */
-    public void testcheckAnswerShouldThrowException() throws Exception {
+    @Test
+    void testcheckAnswerShouldThrowException() throws Exception {
         String answerFail = "{\n"
                 + "    \"request_proc\":\"fail\",\n"
                 + "    \"ops\":[\n"
@@ -141,10 +145,11 @@ public class UtiisTest extends TestCase {
     /**
      * Operation builder exceptions test
      */
-    public void testOperationBuilderShouldThrowEsception() {
-        JSONObject res_data = new JSONObject()
-                .element("id", "1")
-                .element("test", "2");
+    @Test
+    void testOperationBuilderShouldThrowEsception() {
+        ObjectNode res_data = mapper.createObjectNode();
+        res_data.put("id", "1");
+        res_data.put("test", "2");
         String conv_id = "11";
         String ref = "22";
         // response
@@ -215,11 +220,12 @@ public class UtiisTest extends TestCase {
     /**
      * Answer builder test
      */
-    public void testGetConAnswerMessage() {
+    @Test
+    void testGetConAnswerMessage() {
 
-        JSONObject res_data = new JSONObject()
-                .element("id", "1")
-                .element("test", "2");
+        ObjectNode res_data = mapper.createObjectNode();
+        res_data.put("id", "1");
+        res_data.put("test", "2");
         String conv_id = "11";
         String ref = "22";
         String body = CorezoidMessage.response(Arrays.asList(ResponseOperation.ok(conv_id, ref, res_data)));
@@ -233,10 +239,11 @@ public class UtiisTest extends TestCase {
     /**
      * Requst builder tests
      */
-    public void testGetConvQueryCreateMessage() {
-        JSONObject data = new JSONObject()
-                .element("phone", "1")
-                .element("card", "2");
+    @Test
+    void testGetConvQueryCreateMessage() {
+        ObjectNode data = mapper.createObjectNode();
+        data.put("phone", "1");
+        data.put("card", "2");
         String ref = "11";
         String conv_id = "1234";
         String key = "123";
@@ -252,10 +259,11 @@ public class UtiisTest extends TestCase {
     /**
      * Requst builder tests
      */
-    public void testGetConvQueryModifyRefMessage() {
-        JSONObject data = new JSONObject()
-                .element("phone", "1")
-                .element("card", "2");
+    @Test
+    void testGetConvQueryModifyRefMessage() {
+        ObjectNode data = mapper.createObjectNode();
+        data.put("phone", "1");
+        data.put("card", "2");
         String ref = "11";
         String conv_id = "1234";
         String key = "123";
@@ -271,10 +279,11 @@ public class UtiisTest extends TestCase {
     /**
      * Requst builder tests
      */
-    public void testGetConvQueryModifyIdMessage() {
-        JSONObject data = new JSONObject()
-                .element("phone", "1")
-                .element("card", "2");
+    @Test
+    void testGetConvQueryModifyIdMessage() {
+        ObjectNode data = mapper.createObjectNode();
+        data.put("phone", "1");
+        data.put("card", "2");
         String taskId = "11";
         String conv_id = "1234";
         String key = "123";
@@ -290,10 +299,11 @@ public class UtiisTest extends TestCase {
     /**
      * MessageBuilder Exceptions test
      */
-    public void testConveyorQueryShouldThrowException() {
-        JSONObject data = new JSONObject()
-                .element("phone", "1")
-                .element("card", "2");
+    @Test
+    void testConveyorQueryShouldThrowException() {
+        ObjectNode data = mapper.createObjectNode();
+        data.put("phone", "1");
+        data.put("card", "2");
         String ref = "11";
         String conv_id = "1234";
         String apiSecret = "1234";
@@ -330,10 +340,11 @@ public class UtiisTest extends TestCase {
             System.out.println(">>testConveyorQueryBuilderShouldThrowException :\t" + ex.getMessage());
         }
     }
-    public void testRequestOperationShouldThrowException(){
-        JSONObject data = new JSONObject()
-                .element("phone", "1")
-                .element("card", "2");
+    @Test
+    void testRequestOperationShouldThrowException(){
+        ObjectNode data = mapper.createObjectNode();
+        data.put("phone", "1");
+        data.put("card", "2");
         String ref = "11";
         String taskId = "12";
         String conv_id = "1234";

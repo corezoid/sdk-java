@@ -6,6 +6,7 @@ import com.corezoid.sdk.entity.RequestOperation;
 import com.corezoid.sdk.entity.ResponseOperation;
 
 import java.util.Collections;
+import java.util.Map;
 
 public class CorezoidMessageTest {
 
@@ -13,8 +14,8 @@ public class CorezoidMessageTest {
     public void testRequestCreation() {
         CorezoidMessage message = CorezoidMessage.request("secret", "login", Collections.emptyList());
         assertNotNull(message);
-        assertEquals("login", message.getApiLogin());
-        assertEquals("secret", message.getApiSecret());
+        assertTrue(message.body.contains("ops"));
+        assertTrue(message.sign.length() > 0);
     }
 
     @Test

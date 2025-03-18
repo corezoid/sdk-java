@@ -3,6 +3,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.corezoid.sdk.entity.CorezoidMessage;
 import com.corezoid.sdk.utils.HttpManager;
+import com.corezoid.sdk.utils.HttpException;
+
+import java.util.Collections;
 
 public class HttpManagerTest {
 
