@@ -238,7 +238,7 @@ public final class CorezoidMessage {
     private static final String proc = "proc";
     private static final String ref = "ref";
     private static final String slash = "/";
-    private static final String host = "https://www.corezoid.com";
+    private static final String host = "https://api.corezoid.com";
     private static final String version = "1";
     private static final String format = "json";
 
