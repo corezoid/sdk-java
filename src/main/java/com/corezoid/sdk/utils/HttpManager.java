@@ -21,6 +21,13 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * Handles HTTP communication with the Corezoid platform.
+ * <p>
+ * This class manages HTTP connections to the Corezoid API, including connection pooling,
+ * request execution, and response handling. It provides methods for sending messages
+ * to the Corezoid API and processing the responses.
+ * </p>
+ *
  * @author Corezoid <support@corezoid.com>
  */
 public class HttpManager {

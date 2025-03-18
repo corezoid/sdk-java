@@ -4,7 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * Request operation
+ * Builder for request operations to the Corezoid API.
+ * <p>
+ * This class provides builder methods for creating different types of operations
+ * that can be performed on Corezoid tasks, such as creating new tasks or modifying
+ * existing ones by reference or ID.
+ * </p>
  *
  * @author Corezoid <support@corezoid.com>
  */

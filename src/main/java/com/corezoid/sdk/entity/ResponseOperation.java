@@ -4,7 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * Response operation
+ * Builder for response operations from the Corezoid API.
+ * <p>
+ * This class provides builder methods for creating response objects representing
+ * operation results, such as successful or failed operations.
+ * </p>
  *
  * @author Corezoid <support@corezoid.com>
  */
