@@ -1,9 +1,15 @@
 package com.corezoid.sdk.entity;
 
-import net.sf.json.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * Request operation
+ * Builder for request operations to the Corezoid API.
+ * <p>
+ * This class provides builder methods for creating different types of operations
+ * that can be performed on Corezoid tasks, such as creating new tasks or modifying
+ * existing ones by reference or ID.
+ * </p>
  *
  * @author Corezoid <support@corezoid.com>
  */
@@ -19,7 +25,7 @@ public class RequestOperation {
      * @return
      */
     public static RequestOperation create(String convId, String ref,
-                                          JSONObject data) {
+                                          ObjectNode data) {
 
         return new RequestOperation(Query.create, convId, ref, null, data);
     }
@@ -34,7 +40,7 @@ public class RequestOperation {
      */
     @Deprecated
     public static RequestOperation modify(String convId, String ref,
-                                          JSONObject data) {
+                                          ObjectNode data) {
 
         return new RequestOperation(Query.modify, convId, ref, null, data);
     }
@@ -49,7 +55,7 @@ public class RequestOperation {
      * @return
      */
     public static RequestOperation modifyId(String convId, String taskId,
-                                            JSONObject data) {
+                                            ObjectNode data) {
 
         return new RequestOperation(Query.modify, convId, null, taskId, data);
     }
@@ -64,7 +70,7 @@ public class RequestOperation {
      * @return
      */
     public static RequestOperation modifyRef(String convId, String ref,
-                                             JSONObject data) {
+                                             ObjectNode data) {
 
         return new RequestOperation(Query.modify, convId, ref, null, data);
     }
@@ -77,7 +83,7 @@ public class RequestOperation {
      * @param data - task data
      */
     private RequestOperation(Query type, String convId, String ref, String objId,
-                             JSONObject data) {
+                             ObjectNode data) {
         if(convId == null || convId.equals("") ){
             throw new IllegalArgumentException("convId is null or empty");
         }
@@ -102,18 +108,19 @@ public class RequestOperation {
     }
 
     //----------------------------------------------------------------------------------------------------------------------
-    public JSONObject toJSONObject() {
-        JSONObject res = new JSONObject();
-        if(ref!= null){
-            res.element("ref", ref);
+    public ObjectNode toJSONObject() {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode res = mapper.createObjectNode();
+        if(ref != null){
+            res.put("ref", ref);
         }
-        if(objId!= null){
-            res.element("obj_id", objId);
+        if(objId != null){
+            res.put("obj_id", objId);
         }
-        res.element("conv_id", convId);
-        res.element("type", type);
-        res.element("obj", obj);
-        res.element("data", data);
+        res.put("conv_id", convId);
+        res.put("type", type.name());
+        res.put("obj", obj);
+        res.set("data", data);
         return res;
     }
     //----------------------------------------------------------------------------------------------------------------------
@@ -122,7 +129,7 @@ public class RequestOperation {
     private final String ref;
     private final Query type;
     private final String obj;
-    private final JSONObject data;
+    private final ObjectNode data;
 
     private enum Query {
 

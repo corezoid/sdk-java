@@ -3,12 +3,19 @@ package com.corezoid.sdk.entity;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.util.*;
-import javax.xml.bind.DatatypeConverter;
+import java.util.HexFormat;
 
-import net.sf.json.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * Message
+ * Core message handling class for the Corezoid SDK.
+ * <p>
+ * This class is responsible for creating, signing, and verifying messages exchanged with the Corezoid platform.
+ * It handles the creation of request messages with proper signatures, verification of incoming message signatures,
+ * and parsing of response messages.
+ * </p>
  *
  * @author Corezoid <support@corezoid.com>
  */
@@ -16,30 +23,42 @@ public final class CorezoidMessage {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Builder for response body
+     * Creates a response message from a list of response operations.
+     * <p>
+     * This method builds a JSON response containing the results of the operations.
+     * </p>
      *
-     * @param operations
-     * @return
+     * @param operations List of response operations to include in the message
+     * @return JSON string containing the response message
+     * @throws IllegalArgumentException if operations is null
      */
     public static String response(List<ResponseOperation> operations) {
         if (operations == null) {
             throw new IllegalArgumentException("operations is null");
         }
-        JSONObject obj = new JSONObject();
-        obj.element(request_proc, ResultType.ok);
-        obj.element(ops, new JSONArray());
-        JSONArray jsOps = new JSONArray();
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode obj = mapper.createObjectNode();
+        obj.put(request_proc, ResultType.ok.name());
+        ArrayNode jsOps = mapper.createArrayNode();
         for (ResponseOperation op : operations) {
             jsOps.add(op.toJSONObject());
         }
-        obj.element(ops, jsOps);
-        String content = obj.toString();
-        return content;
+        obj.set(ops, jsOps);
+        return obj.toString();
     }
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Builder for request message
+     * Creates a request message with the default host.
+     * <p>
+     * This method builds a signed request message containing the operations to be performed.
+     * </p>
+     *
+     * @param apiSecret API secret key for signing the message
+     * @param apiLogin API login identifier
+     * @param operations List of request operations to include in the message
+     * @return CorezoidMessage object containing the request message and signature
+     * @throws IllegalArgumentException if any parameter is null or empty
      */
     public static CorezoidMessage request(String apiSecret, String apiLogin,
                                       List<RequestOperation> operations) {
@@ -48,12 +67,18 @@ public final class CorezoidMessage {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Builder for request message
-     * @param host override default host value
-     * @param apiSecret
-     * @param apiLogin
-     * @param operations
-     * @return
+     * Creates a request message with a custom host.
+     * <p>
+     * This method builds a signed request message containing the operations to be performed,
+     * using a custom host URL instead of the default one.
+     * </p>
+     *
+     * @param host Custom host URL to use instead of the default
+     * @param apiSecret API secret key for signing the message
+     * @param apiLogin API login identifier
+     * @param operations List of request operations to include in the message
+     * @return CorezoidMessage object containing the request message and signature
+     * @throws IllegalArgumentException if any parameter is null or empty
      */
     public static CorezoidMessage request(String host, String apiSecret, String apiLogin,
                                           List<RequestOperation> operations) {
@@ -66,13 +91,13 @@ public final class CorezoidMessage {
         if (operations == null) {
             throw new IllegalArgumentException("operations is null");
         }
-        JSONObject obj = new JSONObject();
-        obj.element(ops, new JSONArray());
-        JSONArray jsOps = new JSONArray();
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode obj = mapper.createObjectNode();
+        ArrayNode jsOps = mapper.createArrayNode();
         for (RequestOperation op : operations) {
             jsOps.add(op.toJSONObject());
         }
-        obj.element(ops, jsOps);
+        obj.set(ops, jsOps);
         String content = obj.toString();
         String unixTime = String.valueOf(System.currentTimeMillis() / 1000);
 
@@ -81,13 +106,17 @@ public final class CorezoidMessage {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Check signature
+     * Verifies the signature of a message.
+     * <p>
+     * This method checks if a received signature matches the calculated signature
+     * for the given content, time, and API secret.
+     * </p>
      *
-     * @param sign      - @QueruParam SIGNATURE from url
-     * @param apiSecret - api secret key
-     * @param time      - @QueruParam GMT_UNIXTIME from url
-     * @param content   - request body
-     * @return true if signature is valid, or false
+     * @param sign The signature to verify (from the SIGNATURE query parameter)
+     * @param apiSecret The API secret key used for signing
+     * @param time The timestamp when the message was created (from the GMT_UNIXTIME query parameter)
+     * @param content The message body content
+     * @return true if the signature is valid, false otherwise
      */
     public static boolean checkSign(String sign, String apiSecret, String time,
                                     String content) {
@@ -98,24 +127,29 @@ public final class CorezoidMessage {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Parse conveyor answer to ref-status map
+     * Parses a response from the Corezoid API into a map of reference-to-status pairs.
+     * <p>
+     * This method processes the JSON response from the Corezoid API and extracts
+     * the status of each operation, indexed by the task reference.
+     * </p>
      *
-     * @param jsonString - request body
-     * @return map "task referece"-"process status"
-     * @throws Exception if packet processing was failed
+     * @param jsonString The JSON response string from the Corezoid API
+     * @return A map where keys are task references and values are processing statuses
+     * @throws Exception if the response indicates a failure or cannot be parsed
      */
     public static Map<String, String> parseAnswer(String jsonString) throws Exception {
-        JSONObject obj = parseJson(jsonString);
-        String reqProc = obj.getString(request_proc);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode obj = (ObjectNode) mapper.readTree(jsonString);
+        String reqProc = obj.get(request_proc).asText();
         if (!reqProc.equals("ok")) {
             throw new Exception(String.format("Request processing failed, request_proc = %s ", reqProc));
         }
-        JSONArray operations = obj.getJSONArray(ops);
-        Map<String, String> result = new HashMap<String, String>();
+        ArrayNode operations = (ArrayNode) obj.get(ops);
+        Map<String, String> result = new HashMap<>();
         for (int i = 0; i < operations.size(); i++) {
-            JSONObject op = operations.getJSONObject(i);
-            String opRef = op.getString(ref);
-            String opProc = op.getString(proc);
+            ObjectNode op = (ObjectNode) operations.get(i);
+            String opRef = op.get(ref).asText();
+            String opProc = op.get(proc).asText();
             result.put(opRef, opProc);
         }
         return result;
@@ -199,7 +233,7 @@ public final class CorezoidMessage {
         String sha1hex;
         try {
             bytes = (time + apiSecret + body + apiSecret).getBytes("UTF-8");
-            sha1hex = DatatypeConverter.printHexBinary(sha1.digest(bytes)).toLowerCase();
+            sha1hex = HexFormat.of().formatHex(sha1.digest(bytes)).toLowerCase();
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("generateSign error", e);
         }
@@ -217,15 +251,6 @@ public final class CorezoidMessage {
             }
         }
     };
-
-    //----------------------------------------------------------------------------------------------------------------------
-    private static JSONObject parseJson(Object content) throws Exception {
-        try {
-            return (JSONObject) JSONSerializer.toJSON(content);
-        } catch (Exception ex) {
-            throw new Exception(String.format("json parsing error. %s", ex.getMessage()));
-        }
-    }
 
     //----------------------------------------------------------------------------------------------------------------------
     public final String body;

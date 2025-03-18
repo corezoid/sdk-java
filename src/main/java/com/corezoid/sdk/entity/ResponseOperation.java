@@ -1,9 +1,14 @@
 package com.corezoid.sdk.entity;
 
-import net.sf.json.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * Response operation
+ * Builder for response operations from the Corezoid API.
+ * <p>
+ * This class provides builder methods for creating response objects representing
+ * operation results, such as successful or failed operations.
+ * </p>
  *
  * @author Corezoid <support@corezoid.com>
  */
@@ -19,7 +24,7 @@ public class ResponseOperation {
      * @return
      */
     public static ResponseOperation fail(String convId, String ref,
-                                         JSONObject data) {
+                                         ObjectNode data) {
         return new ResponseOperation(ResultType.fail, convId, ref, data);
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -33,7 +38,7 @@ public class ResponseOperation {
      * @return
      */
     public static ResponseOperation ok(String convId, String ref,
-                                       JSONObject data) {
+                                       ObjectNode data) {
         return new ResponseOperation(ResultType.ok, convId, ref, data);
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -45,7 +50,7 @@ public class ResponseOperation {
      * @param data
      */
     private ResponseOperation(ResultType proc, String convId, String ref,
-                              JSONObject data) {
+                              ObjectNode data) {
         if(convId == null || convId.equals("") ){
             throw new IllegalArgumentException("convId is null or empty");
         }
@@ -62,19 +67,20 @@ public class ResponseOperation {
     }
 
 //----------------------------------------------------------------------------------------------------------------------
-    public JSONObject toJSONObject() {
-        JSONObject res = new JSONObject()
-                .element("ref", ref)
-                .element("conv_id", convId)
-                .element("proc", proc)
-                .element("res_data", data);
+    public ObjectNode toJSONObject() {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode res = mapper.createObjectNode();
+        res.put("ref", ref);
+        res.put("conv_id", convId);
+        res.put("proc", proc.name());
+        res.set("res_data", data);
         return res;
     }
 //----------------------------------------------------------------------------------------------------------------------
     private final String convId;
     private final String ref;
     private final ResultType proc;
-    private final JSONObject data;
+    private final ObjectNode data;
 
     private enum ResultType {
 

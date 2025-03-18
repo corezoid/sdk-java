@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'com.corezoid'
+version '2.4'
+
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
+    implementation 'org.slf4j:slf4j-api:2.0.12'
+    implementation 'ch.qos.logback:logback-classic:1.5.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+test {
+    useJUnitPlatform()
+}
