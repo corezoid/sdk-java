@@ -86,7 +86,11 @@ public class HttpManager {
             }
             return body;
         } catch (Exception ex) {
-            throw new HttpException("Fail to send " + request.getMethod() + " request to url " + request.getUri() + ", " + ex.getMessage(), ex);
+            try {
+                throw new HttpException("Fail to send " + request.getMethod() + " request to url " + request.getUri() + ", " + ex.getMessage(), ex);
+            } catch (java.net.URISyntaxException uriEx) {
+                throw new HttpException("Invalid URI in request: " + uriEx.getMessage(), uriEx);
+            }
         }
     }
 //----------------------------------------------------------------------------------------------------------------------
