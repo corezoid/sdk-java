@@ -106,17 +106,41 @@ public final class CorezoidMessage {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Verifies the signature of a message.
+     * Verifies the signature of a message received from Corezoid.
      * <p>
      * This method checks if a received signature matches the calculated signature
-     * for the given content, time, and API secret.
+     * for the given content, time, and API secret. This is typically used when
+     * processing callbacks or webhooks from Corezoid to ensure message authenticity.
      * </p>
+     * 
+     * <p><strong>Security Note:</strong> This method uses SHA-1 hashing as required 
+     * by the Corezoid API specification. While SHA-1 is cryptographically weak, 
+     * it cannot be changed without breaking compatibility with Corezoid servers.</p>
      *
-     * @param sign The signature to verify (from the SIGNATURE query parameter)
-     * @param apiSecret The API secret key used for signing
+     * @param sign The signature to verify (from the SIGNATURE query parameter in callbacks)
+     * @param apiSecret The API secret key used for signing (same as used for requests)
      * @param time The timestamp when the message was created (from the GMT_UNIXTIME query parameter)
-     * @param content The message body content
-     * @return true if the signature is valid, false otherwise
+     * @param content The message body content (JSON string)
+     * @return true if the signature is valid and the message is authentic, false otherwise
+     * 
+     * @see #request(String, String, List) for creating signed requests
+     * 
+     * @example
+     * <pre>{@code
+     * // Verify a callback from Corezoid
+     * boolean isValid = CorezoidMessage.checkSign(
+     *     request.getParameter("signature"),
+     *     "your_api_secret",
+     *     request.getParameter("gmt_unixtime"),
+     *     requestBody
+     * );
+     * 
+     * if (isValid) {
+     *     // Process the callback
+     * } else {
+     *     // Reject the request - invalid signature
+     * }
+     * }</pre>
      */
     public static boolean checkSign(String sign, String apiSecret, String time,
                                     String content) {
@@ -130,12 +154,43 @@ public final class CorezoidMessage {
      * Parses a response from the Corezoid API into a map of reference-to-status pairs.
      * <p>
      * This method processes the JSON response from the Corezoid API and extracts
-     * the status of each operation, indexed by the task reference.
+     * the status of each operation, indexed by the task reference. This is used
+     * to determine the success or failure of individual operations in a request.
      * </p>
+     * 
+     * <p><strong>Response Format:</strong> The expected JSON format is:</p>
+     * <pre>{@code
+     * {
+     *   "request_proc": "ok",
+     *   "ops": [
+     *     {"ref": "task-ref-1", "proc": "ok"},
+     *     {"ref": "task-ref-2", "proc": "fail"}
+     *   ]
+     * }
+     * }</pre>
      *
      * @param jsonString The JSON response string from the Corezoid API
-     * @return A map where keys are task references and values are processing statuses
-     * @throws Exception if the response indicates a failure or cannot be parsed
+     * @return A map where keys are task references and values are processing statuses 
+     *         (typically "ok", "fail", or other status codes)
+     * @throws Exception if the response indicates a failure (request_proc != "ok") 
+     *         or the JSON cannot be parsed
+     * 
+     * @example
+     * <pre>{@code
+     * String response = httpManager.send(message);
+     * Map<String, String> results = CorezoidMessage.parseAnswer(response);
+     * 
+     * for (Map.Entry<String, String> entry : results.entrySet()) {
+     *     String taskRef = entry.getKey();
+     *     String status = entry.getValue();
+     *     
+     *     if ("ok".equals(status)) {
+     *         System.out.println("Task " + taskRef + " processed successfully");
+     *     } else {
+     *         System.err.println("Task " + taskRef + " failed: " + status);
+     *     }
+     * }
+     * }</pre>
      */
     public static Map<String, String> parseAnswer(String jsonString) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
@@ -168,13 +223,8 @@ public final class CorezoidMessage {
         this.time = time;
         this.apiSecret = apiSecret;
         this.signCode = generateSign(time, apiSecret, body);
-        this.url = new StringBuilder()
-                .append(baseUri).append("/api/")
-                .append(version).append(slash)
-                .append(format).append(slash)
-                .append(apiLogin).append(slash)
-                .append(time).append(slash)
-                .append(signCode).toString();
+        this.url = String.format("%s/api/%s/%s/%s/%s/%s", 
+                baseUri, version, format, apiLogin, time, signCode);
     }
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -205,19 +255,14 @@ public final class CorezoidMessage {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + (this.body != null ? this.body.hashCode() : 0);
-        hash = 89 * hash + (this.time != null ? this.time.hashCode() : 0);
-        hash = 89 * hash + (this.apiSecret != null ? this.apiSecret.hashCode() : 0);
-        hash = 89 * hash + (this.signCode != null ? this.signCode.hashCode() : 0);
-        hash = 89 * hash + (this.url != null ? this.url.hashCode() : 0);
-        return hash;
+        // Only use signCode to match the equals() method implementation
+        return this.signCode != null ? this.signCode.hashCode() : 0;
     }
 
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Genarate signature {SIGNATURE} = hex( sha1({GMT_UNIXTIME} + {API_SECRET}
+     * Generate signature {SIGNATURE} = hex( sha1({GMT_UNIXTIME} + {API_SECRET}
      * + {CONTENT} + {API_SECRET}) )
      *
      * @param time      - time

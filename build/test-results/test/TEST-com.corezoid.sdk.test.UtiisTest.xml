@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.corezoid.sdk.test.UtiisTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2025-07-01T09:52:38" hostname="cursor" time="0.016">
+  <properties/>
+  <testcase name="testRequestOperationShouldThrowException()" classname="com.corezoid.sdk.test.UtiisTest" time="0.003"/>
+  <testcase name="testGetConvQueryModifyIdMessage()" classname="com.corezoid.sdk.test.UtiisTest" time="0.001"/>
+  <testcase name="testGetConvQueryModifyRefMessage()" classname="com.corezoid.sdk.test.UtiisTest" time="0.001"/>
+  <testcase name="testcheckAnswerShouldThrowException()" classname="com.corezoid.sdk.test.UtiisTest" time="0.001"/>
+  <testcase name="testGetConvQueryCreateMessage()" classname="com.corezoid.sdk.test.UtiisTest" time="0.001"/>
+  <testcase name="testCheckSignTrue()" classname="com.corezoid.sdk.test.UtiisTest" time="0.001"/>
+  <testcase name="testCheckAnswerReturnsNotEmptyMap()" classname="com.corezoid.sdk.test.UtiisTest" time="0.001"/>
+  <testcase name="testGetConAnswerMessage()" classname="com.corezoid.sdk.test.UtiisTest" time="0.0"/>
+  <testcase name="testConveyorQueryShouldThrowException()" classname="com.corezoid.sdk.test.UtiisTest" time="0.0"/>
+  <testcase name="testOperationBuilderShouldThrowEsception()" classname="com.corezoid.sdk.test.UtiisTest" time="0.001"/>
+  <testcase name="testCheckSignFalse()" classname="com.corezoid.sdk.test.UtiisTest" time="0.001"/>
+  <system-out><![CDATA[>>testRequestOperationShouldThrowException :	ref and taskId is null
+>>testRequestOperationShouldThrowException :	taskId is empty
+>>testRequestOperationShouldThrowException :	ref and taskId is null
+>>testRequestOperationShouldThrowException :	ref is empty
+>>testGetConvQueryModifyRefMessage :
+body 		{"ops":[{"obj_id":"11","conv_id":"1234","type":"modify","obj":"task","data":{"phone":"1","card":"2"}}]}
+url 		 https://api.corezoid.com/api/1/json/12345/1751363558/b45354cf865adc098d87ddfee042bfa073308b5f
+>>testGetConvQueryModifyRefMessage :
+body 		{"ops":[{"ref":"11","conv_id":"1234","type":"modify","obj":"task","data":{"phone":"1","card":"2"}}]}
+url 		 https://api.corezoid.com/api/1/json/12345/1751363558/b1e87e654e7f1f8e378e04a63ed6b8ed0dedef69
+>>testcheckAnswerShouldThrowException :	Request processing failed, request_proc = fail 
+>>testGetConvQueryCreateMessage :
+body 		{"ops":[{"ref":"11","conv_id":"1234","type":"create","obj":"task","data":{"phone":"1","card":"2"}}]}
+url 		 https://api.corezoid.com/api/1/json/12345/1751363558/fb6b8de2bc6477d4aa5bb05c1bdc1857ee899693
+>>checkSignTrue :	true
+>>testCheckAnswerReturnsNotEmptyMap :	{PB11345969838=ok}
+>>testGetConAnswerMessage :
+body 		{"request_proc":"ok","ops":[{"ref":"22","conv_id":"11","proc":"ok","res_data":{"id":"1","test":"2"}}]}
+>>testConveyorQueryBuilderShouldThrowException :	apiSecret is null or empty
+>>testConveyorQueryBuilderShouldThrowException :	apiSecret is null or empty
+>>testConveyorQueryBuilderShouldThrowException :	apiLogin is null or empty
+>>testConveyorQueryBuilderShouldThrowException :	apiLogin is null or empty
+>>testConveyorQueryBuilderShouldThrowException :	operations is null
+>>testResponseOperationBuilderShouldThrowEsception :	convId is null or empty
+>>testResponseOperationBuilderShouldThrowEsception :	convId is null or empty
+>>testResponseOperationBuilderShouldThrowEsception :	ref is null or empty
+>>testResponseOperationBuilderShouldThrowEsception :	ref is null or empty
+>>testResponseOperationBuilderShouldThrowEsception :	data is null
+>>testRequestOperationBuilderShouldThrowEsception :	convId is null or empty
+>>testRequestOperationBuilderShouldThrowEsception :	convId is null or empty
+>>testRequestOperationBuilderShouldThrowEsception :	ref and taskId is null
+>>testRequestOperationBuilderShouldThrowEsception :	ref is empty
+>>testRequestOperationBuilderShouldThrowEsception :	data is null
+>>checkSignFalse :	false
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
