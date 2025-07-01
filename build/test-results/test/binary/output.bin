@@ -1,0 +1,34 @@
+D>>testRequestOperationShouldThrowException :	ref and taskId is null
+=>>testRequestOperationShouldThrowException :	taskId is empty
+D>>testRequestOperationShouldThrowException :	ref and taskId is null
+:>>testRequestOperationShouldThrowException :	ref is empty
+%>>testGetConvQueryModifyRefMessage :
+obody 		{"ops":[{"obj_id":"11","conv_id":"1234","type":"modify","obj":"task","data":{"phone":"1","card":"2"}}]}
+}url 		 https://api.corezoid.com/api/1/json/12345/1751358530/2f50be5f1b3f87426fa801b7a0f8bd24fb5fc288e92eea208f4e1d4df30668db
+%>>testGetConvQueryModifyRefMessage :
+lbody 		{"ops":[{"ref":"11","conv_id":"1234","type":"modify","obj":"task","data":{"phone":"1","card":"2"}}]}
+}url 		 https://api.corezoid.com/api/1/json/12345/1751358530/4daf50212e7e2c4237a7b173678dbdf79083e92d8ad557b08f3d7b8ffacdc7a5
+X>>testcheckAnswerShouldThrowException :	Request processing failed, request_proc = fail 
+">>testGetConvQueryCreateMessage :
+lbody 		{"ops":[{"ref":"11","conv_id":"1234","type":"create","obj":"task","data":{"phone":"1","card":"2"}}]}
+}url 		 https://api.corezoid.com/api/1/json/12345/1751358530/5d6f3a1e98aef8e7a8e83594a3dad77cc33f095813b2f3bd5a5483226ec83dc0
+>>checkSignTrue :	true
+9>>testCheckAnswerReturnsNotEmptyMap :	{PB11345969838=ok}
+>>testGetConAnswerMessage :
+nbody 		{"request_proc":"ok","ops":[{"ref":"22","conv_id":"11","proc":"ok","res_data":{"id":"1","test":"2"}}]}
+L>>testConveyorQueryBuilderShouldThrowException :	apiSecret is null or empty
+L>>testConveyorQueryBuilderShouldThrowException :	apiSecret is null or empty
+K>>testConveyorQueryBuilderShouldThrowException :	apiLogin is null or empty
+K>>testConveyorQueryBuilderShouldThrowException :	apiLogin is null or empty
+D>>testConveyorQueryBuilderShouldThrowException :	operations is null
+ M>>testResponseOperationBuilderShouldThrowEsception :	convId is null or empty
+ M>>testResponseOperationBuilderShouldThrowEsception :	convId is null or empty
+ J>>testResponseOperationBuilderShouldThrowEsception :	ref is null or empty
+ J>>testResponseOperationBuilderShouldThrowEsception :	ref is null or empty
+ B>>testResponseOperationBuilderShouldThrowEsception :	data is null
+ L>>testRequestOperationBuilderShouldThrowEsception :	convId is null or empty
+ L>>testRequestOperationBuilderShouldThrowEsception :	convId is null or empty
+ K>>testRequestOperationBuilderShouldThrowEsception :	ref and taskId is null
+ A>>testRequestOperationBuilderShouldThrowEsception :	ref is empty
+ A>>testRequestOperationBuilderShouldThrowEsception :	data is null
+!>>checkSignFalse :	false

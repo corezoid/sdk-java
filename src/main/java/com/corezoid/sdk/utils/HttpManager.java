@@ -101,5 +101,4 @@ public class HttpManager {
         }
     }
 //----------------------------------------------------------------------------------------------------------------------
-    private static final ContentType jsonUTF8 = ContentType.create("application/json", StandardCharsets.UTF_8);
 }

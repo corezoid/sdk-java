@@ -168,13 +168,8 @@ public final class CorezoidMessage {
         this.time = time;
         this.apiSecret = apiSecret;
         this.signCode = generateSign(time, apiSecret, body);
-        this.url = new StringBuilder()
-                .append(baseUri).append("/api/")
-                .append(version).append(slash)
-                .append(format).append(slash)
-                .append(apiLogin).append(slash)
-                .append(time).append(slash)
-                .append(signCode).toString();
+        this.url = String.format("%s/api/%s/%s/%s/%s/%s", 
+                baseUri, version, format, apiLogin, time, signCode);
     }
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -205,19 +200,14 @@ public final class CorezoidMessage {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + (this.body != null ? this.body.hashCode() : 0);
-        hash = 89 * hash + (this.time != null ? this.time.hashCode() : 0);
-        hash = 89 * hash + (this.apiSecret != null ? this.apiSecret.hashCode() : 0);
-        hash = 89 * hash + (this.signCode != null ? this.signCode.hashCode() : 0);
-        hash = 89 * hash + (this.url != null ? this.url.hashCode() : 0);
-        return hash;
+        // Only use signCode to match the equals() method implementation
+        return this.signCode != null ? this.signCode.hashCode() : 0;
     }
 
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Genarate signature {SIGNATURE} = hex( sha1({GMT_UNIXTIME} + {API_SECRET}
+     * Generate signature {SIGNATURE} = hex( sha256({GMT_UNIXTIME} + {API_SECRET}
      * + {CONTENT} + {API_SECRET}) )
      *
      * @param time      - time
@@ -227,17 +217,17 @@ public final class CorezoidMessage {
      */
     private static String generateSign(String time, String apiSecret,
                                        String body) {
-        MessageDigest sha1 = messageDigest.get();
-        sha1.reset();
+        MessageDigest sha256 = messageDigest.get();
+        sha256.reset();
         byte[] bytes;
-        String sha1hex;
+        String sha256hex;
         try {
             bytes = (time + apiSecret + body + apiSecret).getBytes("UTF-8");
-            sha1hex = HexFormat.of().formatHex(sha1.digest(bytes)).toLowerCase();
+            sha256hex = HexFormat.of().formatHex(sha256.digest(bytes)).toLowerCase();
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("generateSign error", e);
         }
-        return sha1hex;
+        return sha256hex;
     }
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -245,7 +235,7 @@ public final class CorezoidMessage {
         @Override
         protected MessageDigest initialValue() {
             try {
-                return MessageDigest.getInstance("SHA-1");
+                return MessageDigest.getInstance("SHA-256");
             } catch (NoSuchAlgorithmException ex) {
                 throw new RuntimeException("MessageDigest init error", ex);
             }
