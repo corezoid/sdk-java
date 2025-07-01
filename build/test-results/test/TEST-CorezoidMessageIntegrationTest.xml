@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="CorezoidMessageIntegrationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-07-01T08:28:50" hostname="cursor" time="0.034">
+<testsuite name="CorezoidMessageIntegrationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-07-01T09:15:25" hostname="cursor" time="0.032">
   <properties/>
-  <testcase name="testRequestResponseIntegration()" classname="CorezoidMessageIntegrationTest" time="0.028"/>
+  <testcase name="testRequestResponseIntegration()" classname="CorezoidMessageIntegrationTest" time="0.027"/>
   <testcase name="testErrorHandling()" classname="CorezoidMessageIntegrationTest" time="0.002"/>
-  <testcase name="testMessageSigning()" classname="CorezoidMessageIntegrationTest" time="0.002"/>
+  <testcase name="testMessageSigning()" classname="CorezoidMessageIntegrationTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

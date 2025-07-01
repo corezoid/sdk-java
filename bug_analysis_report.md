@@ -3,16 +3,16 @@
 ## Overview
 This report details 3 significant bugs found in the Corezoid Java SDK codebase, including logic errors, security vulnerabilities, and performance issues. Each bug has been analyzed and fixed with detailed explanations.
 
-## Bug #1: Security Vulnerability - SHA-1 Hash Algorithm Usage
+## Bug #1: ⚠️ CRITICAL CORRECTION - SHA-1 Algorithm Issue
 
-### **Severity**: HIGH (Security Vulnerability)
+### **Severity**: CANNOT BE FIXED (API Compatibility Issue)
 ### **Location**: `src/main/java/com/corezoid/sdk/entity/CorezoidMessage.java:210-220`
 
 ### **Description**
-The code uses SHA-1 for generating message signatures, which is cryptographically broken and vulnerable to collision attacks. SHA-1 has been deprecated by NIST since 2011 and should not be used for security-critical applications.
+The code uses SHA-1 for generating message signatures, which is cryptographically weak. However, this is **REQUIRED** by the Corezoid API specification and cannot be changed without breaking compatibility.
 
 ```java
-// Vulnerable code:
+// Required by Corezoid API:
 MessageDigest sha1 = messageDigest.get();
 sha1.reset();
 bytes = (time + apiSecret + body + apiSecret).getBytes("UTF-8");
@@ -20,15 +20,15 @@ sha1hex = HexFormat.of().formatHex(sha1.digest(bytes)).toLowerCase();
 ```
 
 ### **Impact**
-- **Security Risk**: Attackers could potentially forge message signatures
-- **Compliance Issues**: Violates modern security standards
-- **Future-proofing**: SHA-1 support may be removed from future Java versions
+- **Security Limitation**: SHA-1 is cryptographically weak but required by server
+- **API Compatibility**: Changing to SHA-256 would break authentication with Corezoid servers
+- **Cannot be Fixed**: This is a server-side API requirement, not a client bug
 
 ### **Root Cause**
-The code was likely written when SHA-1 was still considered acceptable, but security standards have evolved.
+The Corezoid API specification requires SHA-1 signatures. This is a server-side architectural decision.
 
-### **Fix Applied**
-Upgraded the hash algorithm from SHA-1 to SHA-256, which is currently considered secure and is recommended by security standards.
+### **Resolution**
+**REVERTED** the SHA-1 to SHA-256 change. This is NOT a bug that can be fixed client-side - it's an API requirement. Any signature algorithm change must be coordinated with Corezoid's server-side implementation.
 
 ---
 
@@ -122,12 +122,13 @@ Replaced StringBuilder with direct string concatenation using String.format() fo
 4. Test edge cases with malformed input data
 
 ## Conclusion
-All three bugs have been successfully fixed and tested:
+Two bugs have been successfully fixed, and one critical issue was identified but cannot be fixed:
 
-1. **Security**: Upgraded to SHA-256 for secure message signing
-   - ✅ Updated `CorezoidMessage.java` to use SHA-256 instead of SHA-1
-   - ✅ Updated test case with correct SHA-256 signature
-   - ✅ All tests passing
+1. **⚠️ SHA-1 Algorithm**: CANNOT BE FIXED - Required by Corezoid API
+   - ❌ Attempted to upgrade to SHA-256 but **REVERTED** due to API compatibility
+   - ⚠️ SHA-1 is cryptographically weak but mandated by server specification
+   - ✅ Restored original SHA-1 implementation to maintain API compatibility
+   - ✅ All tests passing with original SHA-1 signatures
 
 2. **Logic**: Fixed equals/hashCode consistency for proper collection behavior  
    - ✅ Modified `hashCode()` to only use `signCode` field, matching `equals()` implementation
@@ -141,8 +142,8 @@ All three bugs have been successfully fixed and tested:
 
 **Additional Cleanup:**
 - ✅ Removed unused `jsonUTF8` variable from `HttpManager`
-- ✅ Fixed typo: "Genarate" → "Generate" in method comment
+- ✅ Fixed typo: "Generate" in method comment
 
 **Test Results:** ✅ All 27 tests pass successfully
 
-The fixes maintain backward compatibility while significantly improving security, correctness, and performance of the SDK. The codebase is now more secure, follows Java best practices, and performs better.
+**Critical Learning:** The SHA-1 "vulnerability" is actually an API requirement. Client-side security improvements must always consider server-side compatibility. The codebase now has better logic consistency and performance while maintaining full API compatibility.

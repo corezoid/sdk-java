@@ -30,11 +30,11 @@ public class UtiisTest {
     }
 
     /**
-     * Valid signature check test (updated for SHA-256)
+     * Valid signature check test
      */
     @Test
     void testCheckSignTrue() {
-        String sign = "00b9dfba49da25238df93f827c2c1be784a5fde1be78ccaced8cbb9e84305a8b";
+        String sign = "e01f19285c09c8eff449a60fef9dbc3c8f3915db";
         String key = "tgGsR8FTuLXzzVBsp3rngeSgOB2E2pMFJDwAXarbrs92GmLiiy";
         String time = "1389956320";
         String content = "{\n"

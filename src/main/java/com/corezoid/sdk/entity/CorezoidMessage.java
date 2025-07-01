@@ -207,7 +207,7 @@ public final class CorezoidMessage {
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
-     * Generate signature {SIGNATURE} = hex( sha256({GMT_UNIXTIME} + {API_SECRET}
+     * Generate signature {SIGNATURE} = hex( sha1({GMT_UNIXTIME} + {API_SECRET}
      * + {CONTENT} + {API_SECRET}) )
      *
      * @param time      - time
@@ -217,17 +217,17 @@ public final class CorezoidMessage {
      */
     private static String generateSign(String time, String apiSecret,
                                        String body) {
-        MessageDigest sha256 = messageDigest.get();
-        sha256.reset();
+        MessageDigest sha1 = messageDigest.get();
+        sha1.reset();
         byte[] bytes;
-        String sha256hex;
+        String sha1hex;
         try {
             bytes = (time + apiSecret + body + apiSecret).getBytes("UTF-8");
-            sha256hex = HexFormat.of().formatHex(sha256.digest(bytes)).toLowerCase();
+            sha1hex = HexFormat.of().formatHex(sha1.digest(bytes)).toLowerCase();
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("generateSign error", e);
         }
-        return sha256hex;
+        return sha1hex;
     }
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ public final class CorezoidMessage {
         @Override
         protected MessageDigest initialValue() {
             try {
-                return MessageDigest.getInstance("SHA-256");
+                return MessageDigest.getInstance("SHA-1");
             } catch (NoSuchAlgorithmException ex) {
                 throw new RuntimeException("MessageDigest init error", ex);
             }

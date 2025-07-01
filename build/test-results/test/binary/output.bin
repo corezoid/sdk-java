@@ -4,14 +4,14 @@
 :>>testRequestOperationShouldThrowException :	ref is empty
 %>>testGetConvQueryModifyRefMessage :
 obody 		{"ops":[{"obj_id":"11","conv_id":"1234","type":"modify","obj":"task","data":{"phone":"1","card":"2"}}]}
-}url 		 https://api.corezoid.com/api/1/json/12345/1751358530/2f50be5f1b3f87426fa801b7a0f8bd24fb5fc288e92eea208f4e1d4df30668db
+eurl 		 https://api.corezoid.com/api/1/json/12345/1751361325/9c77b8d0c293e77eb215dfb67b3e29370ee1b257
 %>>testGetConvQueryModifyRefMessage :
 lbody 		{"ops":[{"ref":"11","conv_id":"1234","type":"modify","obj":"task","data":{"phone":"1","card":"2"}}]}
-}url 		 https://api.corezoid.com/api/1/json/12345/1751358530/4daf50212e7e2c4237a7b173678dbdf79083e92d8ad557b08f3d7b8ffacdc7a5
+eurl 		 https://api.corezoid.com/api/1/json/12345/1751361325/b08b0bbe09937a6ba42866f4ab632bccb6347b4c
 X>>testcheckAnswerShouldThrowException :	Request processing failed, request_proc = fail 
 ">>testGetConvQueryCreateMessage :
 lbody 		{"ops":[{"ref":"11","conv_id":"1234","type":"create","obj":"task","data":{"phone":"1","card":"2"}}]}
-}url 		 https://api.corezoid.com/api/1/json/12345/1751358530/5d6f3a1e98aef8e7a8e83594a3dad77cc33f095813b2f3bd5a5483226ec83dc0
+eurl 		 https://api.corezoid.com/api/1/json/12345/1751361325/8e7eb8f0546ac26116ed92907ca8a7871fb63753
 >>checkSignTrue :	true
 9>>testCheckAnswerReturnsNotEmptyMap :	{PB11345969838=ok}
 >>testGetConAnswerMessage :
