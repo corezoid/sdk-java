@@ -91,6 +91,64 @@ updateData.put("processed_at", System.currentTimeMillis());
 RequestOperation modifyOperation = RequestOperation.modifyRef(conveyorId, reference, updateData);
 CorezoidMessage message = CorezoidMessage.request(apiSecret, apiLogin, 
                                                 Collections.singletonList(modifyOperation));
+
+String response = httpManager.send(message);
+Map<String, String> result = CorezoidMessage.parseAnswer(response);
+System.out.println("Update status: " + result.get(reference));
+```
+
+### Error Handling
+
+```java
+import com.corezoid.sdk.utils.HttpException;
+
+public void createTaskWithErrorHandling() {
+    try {
+        // Create and send request
+        RequestOperation operation = RequestOperation.create(conveyorId, reference, taskData);
+        CorezoidMessage message = CorezoidMessage.request(apiSecret, apiLogin, 
+                                                         Collections.singletonList(operation));
+        
+        String response = httpManager.send(message);
+        Map<String, String> result = CorezoidMessage.parseAnswer(response);
+        
+        String status = result.get(reference);
+        if ("ok".equals(status)) {
+            System.out.println("Task created successfully!");
+        } else {
+            System.err.println("Task creation failed with status: " + status);
+        }
+        
+    } catch (HttpException e) {
+        System.err.println("Network error: " + e.getMessage());
+        // Handle connection issues, timeouts, HTTP errors
+        
+    } catch (Exception e) {
+        System.err.println("Parsing error: " + e.getMessage());
+        // Handle JSON parsing errors, invalid responses
+    }
+}
+```
+
+### Batch Operations
+
+```java
+// Process multiple tasks in a single request
+List<RequestOperation> operations = new ArrayList<>();
+
+// Add multiple operations
+operations.add(RequestOperation.create("1234", "order-1", taskData1));
+operations.add(RequestOperation.create("1234", "order-2", taskData2));
+operations.add(RequestOperation.modifyRef("1234", "existing-ref", updateData));
+
+CorezoidMessage batchMessage = CorezoidMessage.request(apiSecret, apiLogin, operations);
+String response = httpManager.send(batchMessage);
+
+// Parse batch results
+Map<String, String> results = CorezoidMessage.parseAnswer(response);
+for (Map.Entry<String, String> entry : results.entrySet()) {
+    System.out.println("Reference: " + entry.getKey() + ", Status: " + entry.getValue());
+}
 ```
 
 ## Configuration
@@ -168,6 +226,24 @@ HttpManager httpManager = new HttpManager(int maxConnections, int connectionTime
 String response = httpManager.send(CorezoidMessage message)
 ```
 
+## Troubleshooting
+
+For common issues, error handling patterns, and debugging tips, see the [Troubleshooting Guide](TROUBLESHOOTING.md).
+
+Common issues include:
+- **Authentication failures** - Check API credentials and conveyor permissions
+- **Connection timeouts** - Adjust HttpManager timeout settings
+- **JSON parsing errors** - Validate request data and response format
+- **Memory leaks** - Reuse HttpManager instances instead of creating new ones
+
+## Best Practices
+
+- **Reuse HttpManager instances** - Create once, use many times for better performance
+- **Handle errors gracefully** - Always catch HttpException and parsing exceptions
+- **Use batch operations** - Process multiple tasks in single requests when possible
+- **Generate unique references** - Include timestamps or UUIDs to avoid conflicts
+- **Enable debug logging** - Use DEBUG level for troubleshooting issues
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -178,5 +254,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Additional Resources
 
+- [Quick Reference Guide](QUICK_REFERENCE.md) - Concise examples and common patterns
+- [Troubleshooting Guide](TROUBLESHOOTING.md) - Common issues and solutions
 - [Corezoid API Documentation](https://doc.corezoid.com/en/api/upload_modify.html)
 - [Corezoid Website](https://corezoid.com/)
